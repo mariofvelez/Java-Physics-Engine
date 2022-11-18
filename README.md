@@ -15,4 +15,5 @@ A fully-functional physics engine built from scratch in Java.
 
 Demo
 
-![Physics-Engine image1](https://github.com/mariofvelez/Java-Physics-Engine/blob/main/gallery/2022-05-03%2014-52-11.mp4)
+https://user-images.githubusercontent.com/32421774/202818080-a79bb48a-129f-40d2-882d-0cf7c348f953.mp4
+
