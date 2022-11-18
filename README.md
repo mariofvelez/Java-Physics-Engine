@@ -1,7 +1,7 @@
 # Java-Physics-Engine
 A fully-functional physics engine built from scratch in Java.
 
-#Features
+# Features
 - Polygon-polygon, circle-circle, and polygon-circle collision detection and response
 - Kinematics with forces and rotation
 - Rigid body dynamics with restitution
@@ -9,8 +9,10 @@ A fully-functional physics engine built from scratch in Java.
 - Inertia, mass, and center of gravity
 - Object pooling for bodies
 
-#What I learned
+# What I learned
 - Computational geometry - polygon and circle collision, as well as center of mass and inertia
 - Linear algebra - matrix transforms, rotations
 
-Gallery
+Demo
+
+![Physics-Engine image1](https://github.com/mariofvelez/Java-Physics-Engine/blob/main/gallery/2022-05-03%2014-52-11.mp4)
