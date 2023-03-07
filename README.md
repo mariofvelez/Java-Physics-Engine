@@ -3,9 +3,9 @@ A fully-functional physics engine built from scratch in Java.
 
 # Features
 - Polygon-polygon, circle-circle, and polygon-circle collision detection and response
-- Kinematics with forces and rotation
+- 2D Kinematics with forces and rotation
 - Rigid body dynamics with restitution
-- Static objects like walls and ground
+- Static (immovable) objects like walls and ground
 - Inertia, mass, and center of gravity
 - Object pooling for bodies
 
