@@ -27,8 +27,6 @@ import physics.CollisionListener;
 import physics.World;
 import physics.body.Body;
 import physics.body.CollisionType;
-import voronoi.FortuneAlgorithm;
-import voronoi.Diagram;
 
 /**
  * 
@@ -71,7 +69,7 @@ public class Field extends Canvas
 	
 	ArrayList<Vec2d> v;
 	
-	Diagram diagram;
+//	Diagram diagram;
 	
 	public Field(Dimension size) throws Exception {
 		this.setPreferredSize(size);
@@ -98,9 +96,9 @@ public class Field extends Canvas
 			v.add(vec);
 		}
 		
-		FortuneAlgorithm algo = new FortuneAlgorithm(v);
-		algo.construct();
-		diagram = algo.getDiagram();
+//		FortuneAlgorithm algo = new FortuneAlgorithm(v);
+//		algo.construct();
+//		diagram = algo.getDiagram();
 		
 //		body_a = new Body(new Vec2d(size.width / 2, size.height / 2));
 //		body_b = new Body(new Vec2d(size.width / 2 + 5, size.height - 200));
@@ -443,13 +441,13 @@ public class Field extends Canvas
 //			if(poc != null)
 //				poc.debugDraw(g2);
 			
-			g2.setColor(Color.BLUE);
-			for(int i = 0; i < v.size(); ++i)
-			{
-				v.get(i).debugDraw(g2, 3);
-			}
-			g2.setColor(Color.RED);
-			diagram.draw(g2);
+//			g2.setColor(Color.BLUE);
+//			for(int i = 0; i < v.size(); ++i)
+//			{
+//				v.get(i).debugDraw(g2, 3);
+//			}
+//			g2.setColor(Color.RED);
+//			diagram.draw(g2);
 			
 			
 			if(mouseDown != null)
