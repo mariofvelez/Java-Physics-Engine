@@ -13,9 +13,5 @@ A fully-functional physics engine built from scratch in Java.
 - Computational geometry - polygon and circle collision, as well as center of mass and inertia
 - Linear algebra - matrix transforms, rotations
 
-Demo
-
-https://user-images.githubusercontent.com/32421774/202818080-a79bb48a-129f-40d2-882d-0cf7c348f953.mp4
-
-https://img.youtube.com/vi/T8EzDo6zRXo/maxresdefault.jpg
+# Demo
 [![Java Physics Engine Demo](http://img.youtube.com/vi/T8EzDo6zRXo/0.jpg)](http://www.youtube.com/watch?v=T8EzDo6zRXo "Java Physics Engine Demo")
