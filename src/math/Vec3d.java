@@ -1,5 +1,10 @@
 package math;
 
+/**
+ * 
+ * @author Mario Velez
+ *
+ */
 public class Vec3d extends Vec2d {
 	public float z;
 	

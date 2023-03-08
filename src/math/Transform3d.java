@@ -2,7 +2,7 @@ package math;
 
 /**
  * A transform in 3D space
- * @author User
+ * @author Mario Velez
  *
  */
 public class Transform3d {

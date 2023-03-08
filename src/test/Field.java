@@ -341,7 +341,7 @@ public class Field extends Canvas
 				world.removeBody(body);
 		});
 		
-		if(runTime % 1 == 0 && world.getBodySize() < 200)
+		if(runTime % 1 == 0 && world.getBodySize() < 300)
 		{
 			Body body = new Body(new Vec2d(r.nextFloat() * 400 + 600, r.nextFloat() * 100), CollisionType.DYNAMIC);
 			

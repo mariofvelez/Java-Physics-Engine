@@ -9,16 +9,31 @@ import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
 
+/**
+ * Contains all the data for the physics simulation, and is where all the simulation happens
+ * @author Mario Velez
+ *
+ */
 public class World {
 	
+	/**
+	 * The amount of time to step (in seconds) each time the step function is called
+	 */
 	public float dt = 1f/60;
+	/**
+	 * How many movement iterations for each time step
+	 */
 	public int iters = 8;
-	
+	/**
+	 * Acceleration due to gravity, acted on each dynamic object
+	 */
 	public Vec2d gravity = new Vec2d(0, 0);
 	
 	public ArrayList<Body> d_bodies;
 	public ArrayList<Body> s_bodies;
-	
+	/**
+	 * An interface for collisions
+	 */
 	private CollisionListener listener;
 	private CollisionInfo collision_info;
 	
@@ -32,24 +47,45 @@ public class World {
 		
 		remove_list = new ArrayList<>();
 	}
+	/**
+	 * 
+	 * @returns the amount of bodies in this world (dynamic + static)
+	 */
 	public int getBodySize()
 	{
 		return d_bodies.size() + s_bodies.size();
 	}
+	/**
+	 * Sets the collision listener. The collision listener is an interface for checking when collisions happen.
+	 * @param listener - the listener to attach to this world
+	 */
 	public void setCollisionListener(CollisionListener listener)
 	{
 		this.listener = listener;
 	}
+	/**
+	 * Updates the gravity of this world
+	 * @param gravity - the acceleration vector due to gravity
+	 */
 	public void setGravity(Vec2d gravity)
 	{
 		this.gravity.x = gravity.x * dt;
 		this.gravity.y = gravity.y * dt;
 	}
+	/**
+	 * Updates the gravity of this world
+	 * @param gx - the x component of acceleration due to gravity
+	 * @param gy - the y component of the acceleration due to gravity
+	 */
 	public void setGravity(float gx, float gy)
 	{
 		gravity.x = gx * dt;
 		gravity.y = gy * dt;
 	}
+	/**
+	 * Adds a body to this world
+	 * @param body - the body to add
+	 */
 	public void addBody(Body body)
 	{
 		body.world = this;
@@ -60,13 +96,16 @@ public class World {
 			s_bodies.add(body);
 	}
 	/**
-	 * Removes a body from the world, does not actually remove it until the next step() is called
+	 * Removes a body from the world, does not actually remove it until the next step() function is called
 	 * @param body - the body to remove
 	 */
 	public void removeBody(Body body)
 	{
 		remove_list.add(body);
 	}
+	/**
+	 * Steps the simulation forward in time by dt
+	 */
 	public void step()
 	{
 		for(int i = 0; i < remove_list.size(); ++i)
@@ -184,6 +223,10 @@ public class World {
 			}
 		}
 	}
+	/**
+	 * Runs a function for each shape in this world that is connected to a body
+	 * @param f - the function to perform for each shape
+	 */
 	public void forEachShape(Consumer<Shape2d> f)
 	{
 		for(int i = 0; i < d_bodies.size(); ++i)
@@ -191,6 +234,10 @@ public class World {
 		for(int i = 0; i < s_bodies.size(); ++i)
 			f.accept(s_bodies.get(i).getWorldShape());
 	}
+	/**
+	 * Runs a function for each body in this world
+	 * @param f - the function to perform for each body
+	 */
 	public void forEachBody(Consumer<Body> f)
 	{
 		for(int i = 0; i < d_bodies.size(); ++i)
