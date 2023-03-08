@@ -17,8 +17,8 @@ public class Window extends JFrame
 	 * 
 	 */
 	private static final long serialVersionUID = -3494605708565768482L;
-	public static final int WIDTH = 1600;
-	public static final int HEIGHT = 900;
+	public static final int WIDTH = 900;
+	public static final int HEIGHT = 600;
 	
 	public static Window window;
 	

@@ -18,15 +18,12 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Random;
 
-import debug.DebugDrawInfo;
 import geometry.Circle;
 import geometry.Polygon2d;
 import math.Vec2d;
-import physics.CollisionInfo;
-import physics.CollisionListener;
-import physics.World;
 import physics.body.Body;
 import physics.body.CollisionType;
+import test.tests.SpringTest;
 
 /**
  * 
@@ -59,13 +56,9 @@ public class Field extends Canvas
 	public static int[] anchor = new  int[2];
 	public static boolean dragging;
 	
-	World world;
-	
-	Vec2d poc = null;
+	Test test;
 	
 	Random r = new Random();
-	
-	int collisions = 0;
 	
 	ArrayList<Vec2d> v;
 	
@@ -85,16 +78,6 @@ public class Field extends Canvas
 		refreshTime = (int) (1f/50 * 1000);
 
 		keysDown = new ArrayList<Integer>();
-		
-		world = new World();
-		world.setGravity(new Vec2d(0, 550.0f));
-		
-		v = new ArrayList<>();;
-		for(int i = 0; i < 20; ++i)
-		{
-			Vec2d vec = new Vec2d(r.nextFloat() * 300 + 50, r.nextFloat() * 300 + 50);
-			v.add(vec);
-		}
 		
 //		FortuneAlgorithm algo = new FortuneAlgorithm(v);
 //		algo.construct();
@@ -138,31 +121,6 @@ public class Field extends Canvas
 //		body_a.restitution = 0.5f;
 //		body_b.restitution = 0.5f;
 		
-		createGround(size);
-		
-		float speed = 3;
-		
-		createPaddle(new Vec2d(700, 400), -speed);
-		createPaddle(new Vec2d(900, 400), speed);
-		createPaddle(new Vec2d(1000, 600), -speed);
-		createPaddle(new Vec2d(600, 600), speed);
-		
-		for(int i = 0; i < 40; ++i)
-		{
-			Body body = new Body(new Vec2d(r.nextFloat() * 200 + 300, r.nextFloat() * 200 + 300), CollisionType.DYNAMIC);
-			
-			Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
-			for(int x = 0; x < verts.length; ++x)
-			{
-				verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
-			}
-			Polygon2d p = new Polygon2d(verts);
-			body.setShape(p);
-			world.addBody(body);
-//			body.setRotation(r.nextFloat() * (float) Math.PI * 2);
-			body.restitution = 0.7f;
-			body.friction = 0.5f;
-		}
 		
 //		Body body = new Body(new Vec2d(size.width/2, size.height / 3));
 //		body.density = 5f;
@@ -174,100 +132,6 @@ public class Field extends Canvas
 //		
 //		world.addBody(body);
 		
-		world.setCollisionListener(new CollisionListener() {
-			
-			@Override
-			public void beforeSolve(CollisionInfo info) {
-				poc = info.poc;
-				
-			}
-			
-			@Override
-			public void afterSolve(CollisionInfo info) {
-				// TODO Auto-generated method stub
-				collisions++;
-			}
-		});
-		
-	}
-	
-	public void createGround(Dimension size)
-	{
-//		Body b = new Body(new Vec2d(size.width / 2, size.height - 60), CollisionType.STATIC);
-		Body br = new Body(new Vec2d(size.width - size.width / 4 + 40, size.height - 160), CollisionType.STATIC);
-		Body bl = new Body(new Vec2d(size.width / 4 - 40, size.height - 160), CollisionType.STATIC);
-//		Body t = new Body(new Vec2d(size.width / 2, size.height / 2), CollisionType.STATIC);
-		Body l = new Body(new Vec2d(20, size.height / 2), CollisionType.STATIC);
-		Body r = new Body(new Vec2d(size.width - 40, size.height / 2), CollisionType.STATIC);
-		
-		Polygon2d pbr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
-		Polygon2d pbl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
-		Polygon2d pt = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(50, 8));
-		Polygon2d pl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
-		Polygon2d pr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
-		
-		br.setRotation(-0.2f);
-		bl.setRotation(0.2f);
-//		b.setShape(pb);
-		br.setShape(pbr);
-		bl.setShape(pbl);
-//		t.setShape(pt);
-		l.setShape(pl);
-		r.setShape(pr);
-		
-//		setGroundParameters(b);
-		setGroundParameters(br);
-		setGroundParameters(bl);
-//		setGroundParameters(t);
-		setGroundParameters(l);
-		setGroundParameters(r);
-		
-		
-//		world.addBody(b);
-		world.addBody(br);
-		world.addBody(bl);
-//		world.addBody(t);
-		world.addBody(l);
-		world.addBody(r);
-		
-//		t.setRotationSpeed(2f);
-		
-		for(int i = 0; i < 38; ++i)
-		{
-			Body body = new Body(new Vec2d(size.width/2, size.height / 3 - i * 50), CollisionType.DYNAMIC);
-			body.restitution = 0.3f;
-			body.friction = 0.5f;
-			
-			Circle shape = new Circle(new Vec2d(), 20);
-			body.setShape(shape);
-			
-			world.addBody(body);
-		}
-	}
-	private void setGroundParameters(Body b)
-	{
-		b.restitution = 0.9f;
-		b.friction = 0.5f;
-	}
-	private void createPaddle(Vec2d pos, float speed)
-	{
-		Body a = new Body(pos, CollisionType.STATIC);
-		Body b = new Body(pos, CollisionType.STATIC);
-		
-		Polygon2d pa = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(100, 10));
-		Polygon2d pb = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(10, 100));
-		
-		a.setShape(pa);
-		b.setShape(pb);
-		
-		setGroundParameters(a);
-		setGroundParameters(b);
-		
-		world.addBody(a);
-		world.addBody(b);
-		
-		a.setRotationSpeed(speed);
-		b.setRotationSpeed(speed);
 	}
 
 	public void paint(Graphics g) {
@@ -322,7 +186,6 @@ public class Field extends Canvas
 		Toolkit.getDefaultToolkit().sync();
 	}
 	
-	Vec2d local = new Vec2d(50, 10);
 	int[] ms = new int[32];
 	float ms_avg = 0;
 	public void DoLogic() {
@@ -336,28 +199,8 @@ public class Field extends Canvas
 ////		body_b.vel.add(0, 9.8f);
 //		body_b.setRotationSpeed(body_b.getrotationSpeed() * 0.98f);
 		
-		world.forEachBody((body) -> {
-			if(body.getPositionUnmodifiable().y > 1000)
-				world.removeBody(body);
-		});
-		
-		if(runTime % 1 == 0 && world.getBodySize() < 300)
-		{
-			Body body = new Body(new Vec2d(r.nextFloat() * 400 + 600, r.nextFloat() * 100), CollisionType.DYNAMIC);
-			
-			Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
-			for(int x = 0; x < verts.length; ++x)
-			{
-				verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
-			}
-			Polygon2d p = new Polygon2d(verts);
-			body.setShape(p);
-			body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
-			world.addBody(body);
-//			body.setRotation(r.nextFloat() * (float) Math.PI * 2);
-			body.restitution = 0.3f;
-			body.friction = 0.5f;
-		}
+		if(test == null)
+			test = new SpringTest(this);
 		
 		if(mouseDown != null)
 		{
@@ -370,8 +213,7 @@ public class Field extends Canvas
 		
 		long t1 = System.currentTimeMillis();
 		
-		collisions = 0;
-		world.step();
+		test.step();
 		
 		long t2 = System.currentTimeMillis();
 		
@@ -394,31 +236,8 @@ public class Field extends Canvas
 			Graphics2D g2 = (Graphics2D) bufferGraphics;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			
-			Color stat = new Color(82, 82, 82);
+			test.draw(g2);
 			
-			DebugDrawInfo info = new DebugDrawInfo();
-			world.forEachBody((body) -> {
-				
-				if(body.getCollisionType() == CollisionType.DYNAMIC)
-				{
-					Random r = new Random((int) (body.mass * 200));
-					info.col = new Color(r.nextFloat() * 0.5f + 0.5f, r.nextFloat() * 0.5f + 0.5f, r.nextFloat() * 0.5f + 0.5f);
-				}
-				else
-					info.col = stat;
-				body.getWorldShape().debugDraw(g2, info);
-				
-				if(body.shape instanceof Circle)
-				{
-					Circle circle = (Circle) body.shape;
-					Vec2d rad = new Vec2d(circle.radius, 0);
-					body.localToWorld(rad);
-					Vec2d c = new Vec2d(circle.pos);
-					body.localToWorld(c);
-					g2.setColor(Color.BLACK);
-					g2.drawLine((int) c.x, (int) c.y, (int) rad.x, (int) rad.y);
-				}
-			});
 			g2.setColor(Color.BLACK);
 //			Vec2d centroid = new Vec2d(body_b.centroid);
 //			body_b.transform.project2D(centroid);
@@ -456,11 +275,12 @@ public class Field extends Canvas
 				body.localToWorld(pos);
 				g2.setColor(Color.BLUE);
 				g2.drawLine((int) pos.x, (int) pos.y, mousex, mousey);
+				g2.setColor(Color.BLACK);
 			}
 			
 			g2.drawString("time: " + ms_avg + "ms", 20, 20);
-			g2.drawString("objects: " + world.getBodySize(), 20, 40);
-			g2.drawString("collisions/frame: " + collisions, 20, 60);
+			g2.drawString("objects: " + test.world.getBodySize(), 20, 40);
+			g2.drawString("collisions/frame: " + test.info.getCollisions(), 20, 60);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -510,9 +330,9 @@ public class Field extends Canvas
 			leftClick = true;
 			
 			boolean grabbed = false;
-			for(int i = 0; i < world.d_bodies.size(); ++i)
+			for(int i = 0; i < test.world.d_bodies.size(); ++i)
 			{
-				Body body_b = world.d_bodies.get(i);
+				Body body_b = test.world.d_bodies.get(i);
 				Vec2d mouse = new Vec2d(mousex, mousey);
 				if(body_b.getWorldShape().intersects(mouse))
 				{
@@ -542,7 +362,7 @@ public class Field extends Canvas
 					Circle c = new Circle(new Vec2d(), r.nextFloat() * 10 + 20);
 					body.setShape(c);
 				}
-				world.addBody(body);
+				test.world.addBody(body);
 //				body.setRotation(r.nextFloat() * (float) Math.PI * 2);
 				body.restitution = 0.5f;
 			}

@@ -10,7 +10,7 @@ import math.Vec2d;
 import physics.AABB;
 
 public abstract class Shape2d {
-public float area;
+	public float area;
 	
 	/**
 	 * draws the shape to the Graphics2D object

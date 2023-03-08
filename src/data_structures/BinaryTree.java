@@ -1,7 +1,6 @@
 package data_structures;
 
 import java.util.Comparator;
-import java.util.function.Consumer;
 
 public class BinaryTree<T> {
 	

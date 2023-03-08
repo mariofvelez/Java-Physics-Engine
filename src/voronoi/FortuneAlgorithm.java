@@ -1,8 +1,6 @@
 package voronoi;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import geometry.Geometry;
 import math.Vec2d;

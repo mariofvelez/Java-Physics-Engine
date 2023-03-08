@@ -8,6 +8,7 @@ import geometry.Shape2d;
 import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
+import physics.constraint.Constraint;
 
 /**
  * Contains all the data for the physics simulation, and is where all the simulation happens
@@ -31,6 +32,8 @@ public class World {
 	
 	public ArrayList<Body> d_bodies;
 	public ArrayList<Body> s_bodies;
+	
+	public ArrayList<Constraint> constraints;
 	/**
 	 * An interface for collisions
 	 */
@@ -38,14 +41,19 @@ public class World {
 	private CollisionInfo collision_info;
 	
 	private ArrayList<Body> remove_list;
+	private ArrayList<Constraint> constraint_remove_list;
 	
 	public World()
 	{
 		d_bodies = new ArrayList<>();
 		s_bodies = new ArrayList<>();
+		
+		constraints = new ArrayList<>();
+		
 		collision_info = new CollisionInfo();
 		
 		remove_list = new ArrayList<>();
+		constraint_remove_list = new ArrayList<>();
 	}
 	/**
 	 * 
@@ -96,12 +104,30 @@ public class World {
 			s_bodies.add(body);
 	}
 	/**
+	 * Adds a constraint to this world
+	 * @param constraint - the constraint to add
+	 */
+	public void addConstraint(Constraint constraint)
+	{
+		constraint.setWorld(this);
+		
+		constraints.add(constraint);
+	}
+	/**
 	 * Removes a body from the world, does not actually remove it until the next step() function is called
 	 * @param body - the body to remove
 	 */
 	public void removeBody(Body body)
 	{
 		remove_list.add(body);
+	}
+	/**
+	 * Removes a constraint from the world, does not actually remove it until the next step() function is called
+	 * @param constraint - the constraint to remove
+	 */
+	public void removeConstraint(Constraint constraint)
+	{
+		constraint_remove_list.add(constraint);
 	}
 	/**
 	 * Steps the simulation forward in time by dt
@@ -116,10 +142,20 @@ public class World {
 			else if(body.getCollisionType() == CollisionType.STATIC)
 				s_bodies.remove(remove_list.get(i));
 		}
+		for(int i = 0; i < constraint_remove_list.size(); ++i)
+		{
+			constraints.remove(constraint_remove_list.get(i));
+		}
 		remove_list.clear();
+		constraint_remove_list.clear();
 		
 		for(int x = 0; x < iters; ++x)
 		{
+			for(int i = 0; i < constraints.size(); ++i)
+			{
+				constraints.get(i).solve(dt / iters);
+			}
+			
 			for(int i = 0; i < s_bodies.size(); ++i)
 			{
 				Body body = s_bodies.get(i);

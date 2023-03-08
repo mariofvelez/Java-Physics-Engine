@@ -1,2 +1,7 @@
 # Directories
 bin/
+.settings/
+
+# Files
+.classpath
+.project
