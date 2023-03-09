@@ -22,7 +22,7 @@ public class GJK {
 		Vec2d D = new Vec2d(A);
 		D.negate();
 		
-		while(true)
+//		while(true)
 		{
 			a.support(D, A);
 			b.support(D, temp);

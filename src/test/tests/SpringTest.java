@@ -2,6 +2,7 @@ package test.tests;
 
 import java.awt.Graphics2D;
 
+import geometry.Circle;
 import geometry.Polygon2d;
 import math.Vec2d;
 import physics.World;

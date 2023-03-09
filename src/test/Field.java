@@ -23,7 +23,7 @@ import geometry.Polygon2d;
 import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
-import test.tests.SpringTest;
+import test.tests.PolygonTest;
 
 /**
  * 
@@ -200,7 +200,7 @@ public class Field extends Canvas
 //		body_b.setRotationSpeed(body_b.getrotationSpeed() * 0.98f);
 		
 		if(test == null)
-			test = new SpringTest(this);
+			test = new PolygonTest(this);
 		
 		if(mouseDown != null)
 		{
