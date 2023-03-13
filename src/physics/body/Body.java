@@ -68,6 +68,16 @@ public class Body {
 	 */
 	public float move_scale = 1;
 	/**
+	 * The bit groups that this body belongs to.
+	 * The default group is 0b1
+	 */
+	public int group_filter = 1;
+	/**
+	 * The bit groups that this body will collide with.
+	 * The default filter is collide with everything
+	 */
+	public int collide_filter = -1;
+	/**
 	 * Data stored with this body
 	 */
 	public Object user_data;

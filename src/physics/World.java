@@ -184,6 +184,11 @@ public class World {
 				for(int j = 0; j < i; ++j)
 				{
 					Body other = d_bodies.get(j);
+				
+					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
+									  (body.group_filter & other.collide_filter) != 0;
+					if(!collide)
+						continue;
 					
 					Vec2d poi = new Vec2d(0, 0);
 					
@@ -214,7 +219,6 @@ public class World {
 						
 						solveDDCollision(collision_info);
 						
-						
 						if(listener != null)
 							listener.afterSolve(collision_info);
 					}
@@ -225,8 +229,12 @@ public class World {
 				{
 					Body other = s_bodies.get(j);
 					
-					Vec2d poi = new Vec2d(0, 0);
+					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
+							  (body.group_filter & other.collide_filter) != 0;
+					if(!collide)
+						continue;
 					
+					Vec2d poi = new Vec2d(0, 0);
 					
 					if(!body.aabb.intersects(other.aabb))
 						continue;
