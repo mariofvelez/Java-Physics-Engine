@@ -281,6 +281,15 @@ public class World {
 		for(int i = 0; i < s_bodies.size(); ++i)
 			f.accept(s_bodies.get(i));
 	}
+	/**
+	 * Runs a function for each constraint in this world
+	 * @param f - the function to perform for each constraint
+	 */
+	public void forEachConstraint(Consumer<Constraint> f)
+	{
+		for(int i = 0; i < constraints.size(); ++i)
+			f.accept(constraints.get(i));
+	}
 	Vec2d ac = new Vec2d();
 	Vec2d bc = new Vec2d();
 	Vec2d rap = new Vec2d();

@@ -68,6 +68,9 @@ public abstract class Test {
 				g2.drawLine((int) c.x, (int) c.y, (int) rad.x, (int) rad.y);
 			}
 		});
+		world.forEachConstraint((constraint) -> {
+			constraint.debugDraw(g2, transform);
+		});
 		this.info.draw(g2, transform);
 		g2.setColor(Color.BLACK);
 	}
