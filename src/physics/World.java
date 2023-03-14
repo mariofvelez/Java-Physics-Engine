@@ -414,12 +414,15 @@ public class World {
 //			return;
 		
 		Vec2d n = info.normal;
-//		Vec2d lat = n.rightNormal();
+		Vec2d lat = n.rightNormal();
 		
 		//must be negative
 		float na = Vec2d.dotProduct(n, vap1);
 		//must be positive
 		float nb = Vec2d.dotProduct(n, vbp1);
+		
+		float lata = Vec2d.dotProduct(n, vap1);
+		float latb = Vec2d.dotProduct(n, vbp1);
 		
 		//moving away from each other
 		if(na > nb)

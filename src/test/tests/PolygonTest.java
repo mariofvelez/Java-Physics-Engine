@@ -68,21 +68,29 @@ public class PolygonTest extends Test {
 				world.removeBody(body);
 		});
 		
-		if(world.getBodySize() < 100)
+		if(world.getBodySize() < 30)
 		{
 			Body body = new Body(new Vec2d(r.nextFloat() * 400 + field.getSize().width/2 - 200, r.nextFloat() * 100), CollisionType.DYNAMIC);
 			
-			Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
-			for(int x = 0; x < verts.length; ++x)
+			if(r.nextBoolean())
 			{
-				verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
+				Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
+				for(int x = 0; x < verts.length; ++x)
+				{
+					verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
+				}
+				Polygon2d p = new Polygon2d(verts);
+				body.setShape(p);
 			}
-			Polygon2d p = new Polygon2d(verts);
-			body.setShape(p);
+			else
+			{
+				Circle c = new Circle(new Vec2d(), r.nextFloat() * 10 + 20);
+				body.setShape(c);
+			}
 			body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
 			world.addBody(body);
 //			body.setRotation(r.nextFloat() * (float) Math.PI * 2);
-			body.restitution = 0.3f;
+			body.restitution = 0.5f;
 			body.friction = 0.5f;
 		}
 		
@@ -133,17 +141,17 @@ public class PolygonTest extends Test {
 		
 //		t.setRotationSpeed(2f);
 		
-		for(int i = 0; i < 38; ++i)
-		{
-			Body body = new Body(new Vec2d(size.width/2, size.height / 3 - i * 50), CollisionType.DYNAMIC);
-			body.restitution = 0.3f;
-			body.friction = 0.5f;
-			
-			Circle shape = new Circle(new Vec2d(), 20);
-			body.setShape(shape);
-			
-			world.addBody(body);
-		}
+//		for(int i = 0; i < 38; ++i)
+//		{
+//			Body body = new Body(new Vec2d(size.width/2, size.height / 3 - i * 50), CollisionType.DYNAMIC);
+//			body.restitution = 0.3f;
+//			body.friction = 0.5f;
+//			
+//			Circle shape = new Circle(new Vec2d(), 20);
+//			body.setShape(shape);
+//			
+//			world.addBody(body);
+//		}
 	}
 	private void setGroundParameters(Body b)
 	{
