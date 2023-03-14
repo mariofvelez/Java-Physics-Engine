@@ -184,6 +184,11 @@ public class World {
 				for(int j = 0; j < i; ++j)
 				{
 					Body other = d_bodies.get(j);
+				
+					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
+									  (body.group_filter & other.collide_filter) != 0;
+					if(!collide)
+						continue;
 					
 					Vec2d poi = new Vec2d(0, 0);
 					
@@ -214,7 +219,6 @@ public class World {
 						
 						solveDDCollision(collision_info);
 						
-						
 						if(listener != null)
 							listener.afterSolve(collision_info);
 					}
@@ -225,8 +229,12 @@ public class World {
 				{
 					Body other = s_bodies.get(j);
 					
-					Vec2d poi = new Vec2d(0, 0);
+					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
+							  (body.group_filter & other.collide_filter) != 0;
+					if(!collide)
+						continue;
 					
+					Vec2d poi = new Vec2d(0, 0);
 					
 					if(!body.aabb.intersects(other.aabb))
 						continue;
@@ -280,6 +288,15 @@ public class World {
 			f.accept(d_bodies.get(i));
 		for(int i = 0; i < s_bodies.size(); ++i)
 			f.accept(s_bodies.get(i));
+	}
+	/**
+	 * Runs a function for each constraint in this world
+	 * @param f - the function to perform for each constraint
+	 */
+	public void forEachConstraint(Consumer<Constraint> f)
+	{
+		for(int i = 0; i < constraints.size(); ++i)
+			f.accept(constraints.get(i));
 	}
 	Vec2d ac = new Vec2d();
 	Vec2d bc = new Vec2d();

@@ -92,6 +92,8 @@ public class PolygonTest extends Test {
 //			body.setRotation(r.nextFloat() * (float) Math.PI * 2);
 			body.restitution = 0.5f;
 			body.friction = 0.5f;
+//			body.group_filter = 1;
+//			body.collide_filter = 2;
 		}
 		
 		world.step();
@@ -108,6 +110,11 @@ public class PolygonTest extends Test {
 //		Body t = new Body(new Vec2d(size.width / 2, size.height / 2), CollisionType.STATIC);
 		Body l = new Body(new Vec2d(20, size.height / 2), CollisionType.STATIC);
 		Body r = new Body(new Vec2d(size.width - 20, size.height / 2), CollisionType.STATIC);
+		
+//		br.group_filter = 2;
+//		bl.group_filter = 2;
+//		l.group_filter = 2;
+//		r.group_filter = 2;
 		
 		Polygon2d pbr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
 		Polygon2d pbl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
@@ -162,6 +169,9 @@ public class PolygonTest extends Test {
 	{
 		Body a = new Body(pos, CollisionType.STATIC);
 		Body b = new Body(pos, CollisionType.STATIC);
+		
+//		a.group_filter = 2;
+//		b.group_filter = 2;
 		
 		Polygon2d pa = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(len, len / 10.0f));
 		Polygon2d pb = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(len / 10.0f, len));

@@ -68,6 +68,16 @@ public class Body {
 	 */
 	public float move_scale = 1;
 	/**
+	 * The bit groups that this body belongs to.
+	 * The default group is 0b1
+	 */
+	public int group_filter = 1;
+	/**
+	 * The bit groups that this body will collide with.
+	 * The default filter is collide with everything
+	 */
+	public int collide_filter = -1;
+	/**
 	 * Data stored with this body
 	 */
 	public Object user_data;
@@ -292,8 +302,8 @@ public class Body {
 		updateProject();
 	}
 	/**
-	 * Applies a forve to this body at a world position for world.dt seconds
-	 * @param world_pos - the position to apple the force
+	 * Applies a force to this body at a world position for world.dt seconds
+	 * @param world_pos - the position to apply the force
 	 * @param force - the force vector
 	 */
 	public void applyForceWorld(Vec2d world_pos, Vec2d force)
@@ -305,11 +315,15 @@ public class Body {
 //		System.out.println(pos);
 		
 		Vec2d tangent = Vec2d.subtract(world_pos, centroid).rightNormal();
-		tangent.normalize();
-		float t = Vec2d.dist2(world_pos, centroid) * tangent.dotProduct(force);
-		float a = t / I;
-//		System.out.println("a: " + a);
-		setRotationSpeed(a + rot_speed);
+		if(tangent.length2() > 0.00001f)
+		{
+			tangent.normalize();
+			float t = Vec2d.dist2(world_pos, centroid) * tangent.dotProduct(force);
+			float a = t / I;
+	//		System.out.println(tangent);
+	//		System.out.println("a: " + a);
+			setRotationSpeed(a + rot_speed);
+		}
 		vel.x += force.x * world.dt;
 		vel.y += force.y * world.dt;
 	}
