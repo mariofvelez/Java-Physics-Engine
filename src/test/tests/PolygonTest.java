@@ -9,7 +9,6 @@ import geometry.Polygon2d;
 import math.Vec2d;
 import physics.CollisionInfo;
 import physics.CollisionListener;
-import physics.World;
 import physics.body.Body;
 import physics.body.CollisionType;
 import test.Field;
@@ -23,7 +22,6 @@ public class PolygonTest extends Test {
 	{
 		super(field);
 		
-		world = new World();
 		world.setGravity(new Vec2d(0, 550.0f));
 		world.iters = 32;
 		
@@ -118,7 +116,6 @@ public class PolygonTest extends Test {
 		
 		Polygon2d pbr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
 		Polygon2d pbl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
-		Polygon2d pt = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(50, 8));
 		Polygon2d pl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
 		Polygon2d pr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
 		

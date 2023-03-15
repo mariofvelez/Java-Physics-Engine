@@ -28,6 +28,8 @@ public abstract class Test {
 	{
 		this.field = field;
 		
+		world = new World();
+		
 		transform = new Transform(3, true);
 		
 		info = new DebugInfo();
