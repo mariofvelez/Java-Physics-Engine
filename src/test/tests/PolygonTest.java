@@ -43,20 +43,6 @@ public class PolygonTest extends Test {
 		info.curr_world = world;
 		info.show_poc = true;
 		info.show_centroid = true;
-		
-		listener = new CollisionListener()
-		{
-			public void beforeSolve(CollisionInfo coll_info)
-			{
-				info.beforeSolve(coll_info);
-			}
-			
-			public void afterSolve(CollisionInfo coll_info)
-			{
-				info.afterSolve(coll_info);
-			}
-		};
-		world.setCollisionListener(listener);
 	}
 	public void step()
 	{

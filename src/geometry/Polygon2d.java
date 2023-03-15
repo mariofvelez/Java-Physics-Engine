@@ -99,10 +99,10 @@ public class Polygon2d extends Shape2d {
 		
 		if(!info.wireframe)
 		{
-			g2.setColor(info.col);
+			g2.setColor(info.fill_col);
 			g2.fillPolygon(px, py, vertices.length);
 		}
-		g2.setColor(Color.BLACK);
+		g2.setColor(info.outline_col);
 		g2.drawPolygon(px, py, vertices.length);
 	}
 	public void debugDraw(Graphics2D g2, Transform2d transform, boolean fill, Color color)

@@ -57,11 +57,19 @@ public class World {
 	}
 	/**
 	 * 
-	 * @returns the amount of bodies in this world (dynamic + static)
+	 * @returns the total amount of bodies in this world (dynamic + static)
 	 */
 	public int getBodySize()
 	{
 		return d_bodies.size() + s_bodies.size();
+	}
+	public int getDynamicBodySize()
+	{
+		return d_bodies.size();
+	}
+	public int getStaticBodySize()
+	{
+		return s_bodies.size();
 	}
 	/**
 	 * Sets the collision listener. The collision listener is an interface for checking when collisions happen.
@@ -360,7 +368,7 @@ public class World {
 		jn.set(vab1.x * -(1+e), vab1.y * -(1+e));
 		j = Vec2d.dotProduct(jn, n);//Vec2d.mult(vab1, -(1 + e)), n);
 		
-		Vec2d jf = new Vec2d(vab1.x * -(1+u), vab1.y * -(1+u));
+		Vec2d jf = new Vec2d(vab1.x * -(u), vab1.y * -(u));
 		j2 = Vec2d.dotProduct(jf, lat);
 	}
 	private void updateBodyA(CollisionInfo info)

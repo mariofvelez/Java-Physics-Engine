@@ -1,7 +1,7 @@
 package math;
 
 /**
- * It is recommended that you use static import,
+ * It is recommended that you use static import
  * @author Mario Velez
  *
  */

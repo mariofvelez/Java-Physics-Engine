@@ -54,10 +54,10 @@ public class Circle extends Shape2d {
 	{
 		if(!info.wireframe)
 		{
-			g2.setColor(info.col);
+			g2.setColor(info.fill_col);
 			g2.fillOval((int) (pos.x-radius), (int) (pos.y-radius), (int) (radius*2), (int) (radius*2));
 		}
-		g2.setColor(Color.BLACK);
+		g2.setColor(info.outline_col);
 		g2.drawOval((int) (pos.x-radius), (int) (pos.y-radius), (int) (radius*2), (int) (radius*2));
 		
 	}

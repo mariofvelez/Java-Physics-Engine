@@ -26,29 +26,37 @@ public class FrictionTest extends Test {
 		transform.data[4] = -30;
 		
 		world.setGravity(new Vec2d(0.0f, -9.80665f));
-		world.iters = 16;
+		world.iters = 128;
+		
+		info.curr_world = world;
+		info.show_poc = true;
+		info.show_centroid = true;
+		info.show_edge_normals = true;
+		info.show_vertex_velocities = true;
 		
 		createPlatform(new Vec2d(0, 3), -0.1f, r2);
 		
 		for(int i = 0; i < 6; ++i)
 		{
-			createCube(new Vec2d(3 - i * 1.5f, 4), i * 0.05f);
+			createCube(new Vec2d(3 - i * 1.5f, 4), i * 0.2f);
 		}
 		
 		createPlatform(new Vec2d(0, -1), -0.1f, r2);
 		
 		for(int i = 0; i < 6; ++i)
 		{
-			createCircle(new Vec2d(3 - i * 1.5f, 0), i * 0.001f);
+			createCircle(new Vec2d(3 - i * 1.5f, 0), i * 0.2f);
 		}
 		
 		createPlatform(new Vec2d(5, -5), 0.2f, r2);
+		
 		createPlatform(new Vec2d(-3, -5.5f), MathConstant.HALF_PI, 1);
+		createPlatform(new Vec2d(13, -2.5f), MathConstant.HALF_PI, 1);
 	}
 	private void createCube(Vec2d pos, float friction)
 	{
 		Body body = new Body(pos, CollisionType.DYNAMIC);
-		body.restitution = 0.1f;
+		body.restitution = 0.5f;
 		body.friction = friction;
 		
 		Polygon2d p = Polygon2d.createAsBox(new Vec2d(), new Vec2d(r, r));
@@ -59,7 +67,7 @@ public class FrictionTest extends Test {
 	private void createCircle(Vec2d pos, float friction)
 	{
 		Body body = new Body(pos, CollisionType.DYNAMIC);
-		body.restitution = 0.1f;
+		body.restitution = 0.5f;
 		body.friction = friction;
 		
 		Circle c = new Circle(new Vec2d(), r);
@@ -70,7 +78,7 @@ public class FrictionTest extends Test {
 	private void createPlatform(Vec2d pos, float angle, float len)
 	{
 		Body body = new Body(pos, CollisionType.STATIC);
-		body.restitution = 0.0f;
+		body.restitution = 0.5f;
 		body.friction = 1.0f;
 		
 		Polygon2d p = Polygon2d.createAsBox(new Vec2d(), new Vec2d(len, 0.1f));
@@ -82,6 +90,7 @@ public class FrictionTest extends Test {
 	}
 	public void step()
 	{
+		info.restart();
 		world.step();
 	}
 	public void draw(Graphics2D g2)

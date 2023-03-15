@@ -349,7 +349,6 @@ public class Body {
 		v.set(Vec2d.subtract(v2, v));
 		v.mult(1f / dt);
 //		v = v.leftNormal();
-//		v.add(vel.x, vel.y);
 	}
 	/**
 	 * Gets the velocity vector at a world point

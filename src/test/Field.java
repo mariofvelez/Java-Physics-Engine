@@ -20,6 +20,7 @@ import java.util.Random;
 
 import geometry.Circle;
 import geometry.Polygon2d;
+import math.Transform;
 import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
@@ -206,7 +207,11 @@ public class Field extends Canvas
 		{
 			Vec2d pos = new Vec2d(mouseDown);
 			body.localToWorld(pos);
-			Vec2d force = Vec2d.subtract(new Vec2d(mousex, mousey), pos);
+			Vec2d mouse = new Vec2d(mousex, mousey);
+			Transform inverse = new Transform(test.transform);
+			test.transform.invert3x3(inverse);
+			inverse.project2D(mouse);
+			Vec2d force = Vec2d.subtract(mouse, pos);
 			force.mult(5.0f);
 			body.applyForceWorld(pos, force);
 		}
@@ -273,14 +278,11 @@ public class Field extends Canvas
 			{
 				Vec2d pos = new Vec2d(mouseDown);
 				body.localToWorld(pos);
+				test.transform.project2D(pos);
 				g2.setColor(Color.BLUE);
 				g2.drawLine((int) pos.x, (int) pos.y, mousex, mousey);
 				g2.setColor(Color.BLACK);
 			}
-			
-			g2.drawString("time: " + ms_avg + "ms", 20, 20);
-			g2.drawString("objects: " + test.world.getBodySize(), 20, 40);
-			g2.drawString("collisions/frame: " + test.info.getCollisions(), 20, 60);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -334,6 +336,9 @@ public class Field extends Canvas
 			{
 				Body body_b = test.world.d_bodies.get(i);
 				Vec2d mouse = new Vec2d(mousex, mousey);
+				Transform inverse = new Transform(test.transform);
+				test.transform.invert3x3(inverse);
+				inverse.project2D(mouse);
 				if(body_b.getWorldShape().intersects(mouse))
 				{
 					mouseDown = new Vec2d(mouse);

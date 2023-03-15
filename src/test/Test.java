@@ -9,6 +9,7 @@ import geometry.Circle;
 import geometry.Shape2d;
 import math.Transform;
 import math.Vec2d;
+import physics.CollisionInfo;
 import physics.CollisionListener;
 import physics.World;
 import physics.body.CollisionType;
@@ -33,6 +34,21 @@ public abstract class Test {
 		transform = new Transform(3, true);
 		
 		info = new DebugInfo();
+		info.curr_test = this;
+		
+		listener = new CollisionListener()
+		{
+			public void beforeSolve(CollisionInfo coll_info)
+			{
+				info.beforeSolve(coll_info);
+			}
+			
+			public void afterSolve(CollisionInfo coll_info)
+			{
+				info.afterSolve(coll_info);
+			}
+		};
+		world.setCollisionListener(listener);
 	}
 	
 	public abstract void step();
@@ -49,10 +65,16 @@ public abstract class Test {
 			if(body.getCollisionType() == CollisionType.DYNAMIC)
 			{
 				Random r = new Random((int) (body.mass * 200));
-				info.col = new Color(r.nextFloat() * 0.5f + 0.5f, r.nextFloat() * 0.5f + 0.5f, r.nextFloat() * 0.5f + 0.5f);
+				info.fill_col = new Color(r.nextFloat() * 0.5f + 0.5f, r.nextFloat() * 0.5f + 0.5f, r.nextFloat() * 0.5f + 0.5f);
+				float u = body.friction;
+				int col = 255 - (int) (u * 255);
+				info.outline_col = new Color(0, col, col);
 			}
 			else
-				info.col = stat;
+			{
+				info.fill_col = stat;
+				info.outline_col = Color.BLACK;
+			}
 			Shape2d shape = body.getWorldShape().createCopy();
 			body.getWorldShape().projectTo(transform, shape);
 			shape.debugDraw(g2, info);

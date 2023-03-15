@@ -13,13 +13,14 @@ import physics.World;
 public class DebugInfo {
 	
 	public World curr_world = null;
+	public Test curr_test = null;
 	
 	private ArrayList<Vec2d> poc = new ArrayList<Vec2d>();
 	private int collisions = 0;
 	
-	public boolean show_poc = false;
 	public boolean show_centroid = false;
 	public boolean show_edge_normals = false;
+	public boolean show_poc = false;
 	public boolean show_vertex_velocities = false;
 	
 	public void beforeSolve(CollisionInfo info)
@@ -32,6 +33,7 @@ public class DebugInfo {
 	}
 	public void draw(Graphics2D g2, Transform transform)
 	{
+		
 		if(show_poc)
 		{
 			g2.setColor(new Color(26, 33, 38));
@@ -46,8 +48,8 @@ public class DebugInfo {
 		{
 			curr_world.forEachBody(b -> {
 				Vec2d centroid = new Vec2d(b.centroid);
-				Vec2d x = Vec2d.add(b.centroid, Vec2d.mult(Vec2d.EAST, 10));
-				Vec2d y = Vec2d.add(b.centroid, Vec2d.mult(Vec2d.NORTH, 10));
+				Vec2d x = Vec2d.add(b.centroid, Vec2d.mult(Vec2d.EAST, 0.5f));
+				Vec2d y = Vec2d.add(b.centroid, Vec2d.mult(Vec2d.NORTH, 0.5f));
 				
 				b.localToWorld(centroid);
 				b.localToWorld(x);
@@ -66,6 +68,7 @@ public class DebugInfo {
 			});
 			if(show_edge_normals)
 			{
+				g2.setColor(Color.MAGENTA);
 				curr_world.forEachBody(b -> {
 					if(b.shape instanceof Polygon2d)
 					{
@@ -73,12 +76,62 @@ public class DebugInfo {
 						for(int i = 0; i < p.edges.length; ++i)
 						{
 							Vec2d v = Vec2d.avg(p.edges[i]);
+							Vec2d n = Vec2d.subtract(p.edges[i][1], p.edges[i][0]).leftNormal();
+							n.normalize();
+							n.mult(0.5f);
+							n.add(v);
 							
+							transform.project2D(v);
+							transform.project2D(n);
+							
+							g2.drawLine((int)v.x, (int)v.y, (int) n.x, (int) n.y);
+						}
+					}
+				});
+			}
+			if(show_vertex_velocities)
+			{
+				curr_world.forEachBody(b -> {
+					if(b.shape instanceof Polygon2d)
+					{
+						g2.setColor(Color.ORANGE);
+						Polygon2d p = (Polygon2d) b.shape;
+						for(int i = 0; i < p.vertices.length; ++i)
+						{
+							Vec2d v = new Vec2d(p.vertices[i]);
+							b.localToWorld(v);
+							Vec2d vel = new Vec2d(v);
+							b.pointVelocityFromWorld(vel, curr_world.dt / curr_world.iters);
+							vel.mult(0.1f);
+							if(vel.length() > 3.0f)
+							{
+								vel.normalize();
+								vel.mult(3.0f);
+								g2.setColor(Color.RED);
+							}
+							vel.add(v);
+							
+							transform.project2D(v);
+							transform.project2D(vel);
+							
+							g2.drawLine((int)v.x, (int)v.y, (int) vel.x, (int) vel.y);
 						}
 					}
 				});
 			}
 		}
+		
+		g2.setColor(Color.BLACK);
+		int y = 20;
+		g2.drawString("time: " + curr_test.field.ms_avg + "ms", 20, y += 20);
+		g2.drawString("objects: " + curr_world.getBodySize(), 20, y += 20);
+		g2.drawString("-dynamic: " + curr_world.getDynamicBodySize(), 35, y += 20);
+		g2.drawString("-static: " + curr_world.getStaticBodySize(), 35, y += 20);
+		g2.drawString("collisions/frame: " + collisions, 20, y += 20);
+		g2.drawString("show centroid: " + show_centroid, 20, y += 20);
+		g2.drawString("show edge normals: " + show_edge_normals, 20, y += 20);
+		g2.drawString("show points of collision: " + show_poc, 20, y += 20);
+		g2.drawString("show vertex velocities: " + show_vertex_velocities, 20, y += 20);
 	}
 	public void restart()
 	{
