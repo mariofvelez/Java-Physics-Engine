@@ -4,18 +4,18 @@ import java.awt.Graphics2D;
 
 import geometry.Polygon2d;
 import math.Vec2d;
-import physics.World;
 import physics.body.Body;
 import physics.body.CollisionType;
 import physics.constraint.SpringConstraint;
+import test.DebugInfo;
 import test.Field;
 import test.Test;
 
 public class SpringTest extends Test {
 
-	public SpringTest(Field field)
+	public SpringTest(Field field, DebugInfo info)
 	{
-		super(field);
+		super(field, info);
 		
 		transform.data[2] = 450;
 		transform.data[5] = 300;

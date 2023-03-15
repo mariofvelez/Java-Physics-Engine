@@ -25,7 +25,7 @@ public abstract class Test {
 	
 	protected DebugInfo info;
 	
-	public Test(Field field)
+	public Test(Field field, DebugInfo info)
 	{
 		this.field = field;
 		
@@ -33,7 +33,8 @@ public abstract class Test {
 		
 		transform = new Transform(3, true);
 		
-		info = new DebugInfo();
+		this.info = info;
+		info.curr_world = world;
 		info.curr_test = this;
 		
 		listener = new CollisionListener()

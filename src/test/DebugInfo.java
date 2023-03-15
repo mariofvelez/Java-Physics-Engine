@@ -66,59 +66,59 @@ public class DebugInfo {
 				g2.setColor(Color.GREEN);
 				g2.drawLine((int)centroid.x, (int)centroid.y, (int) y.x, (int) y.y);
 			});
-			if(show_edge_normals)
-			{
-				g2.setColor(Color.MAGENTA);
-				curr_world.forEachBody(b -> {
-					if(b.shape instanceof Polygon2d)
+		}
+		if(show_edge_normals)
+		{
+			g2.setColor(Color.MAGENTA);
+			curr_world.forEachBody(b -> {
+				if(b.shape instanceof Polygon2d)
+				{
+					Polygon2d p = (Polygon2d) b.getWorldShape();
+					for(int i = 0; i < p.edges.length; ++i)
 					{
-						Polygon2d p = (Polygon2d) b.getWorldShape();
-						for(int i = 0; i < p.edges.length; ++i)
-						{
-							Vec2d v = Vec2d.avg(p.edges[i]);
-							Vec2d n = Vec2d.subtract(p.edges[i][1], p.edges[i][0]).leftNormal();
-							n.normalize();
-							n.mult(0.5f);
-							n.add(v);
-							
-							transform.project2D(v);
-							transform.project2D(n);
-							
-							g2.drawLine((int)v.x, (int)v.y, (int) n.x, (int) n.y);
-						}
+						Vec2d v = Vec2d.avg(p.edges[i]);
+						Vec2d n = Vec2d.subtract(p.edges[i][1], p.edges[i][0]).leftNormal();
+						n.normalize();
+						n.mult(0.5f);
+						n.add(v);
+						
+						transform.project2D(v);
+						transform.project2D(n);
+						
+						g2.drawLine((int)v.x, (int)v.y, (int) n.x, (int) n.y);
 					}
-				});
-			}
-			if(show_vertex_velocities)
-			{
-				curr_world.forEachBody(b -> {
-					if(b.shape instanceof Polygon2d)
+				}
+			});
+		}
+		if(show_vertex_velocities)
+		{
+			curr_world.forEachBody(b -> {
+				if(b.shape instanceof Polygon2d)
+				{
+					g2.setColor(Color.ORANGE);
+					Polygon2d p = (Polygon2d) b.shape;
+					for(int i = 0; i < p.vertices.length; ++i)
 					{
-						g2.setColor(Color.ORANGE);
-						Polygon2d p = (Polygon2d) b.shape;
-						for(int i = 0; i < p.vertices.length; ++i)
+						Vec2d v = new Vec2d(p.vertices[i]);
+						b.localToWorld(v);
+						Vec2d vel = new Vec2d(v);
+						b.pointVelocityFromWorld(vel, curr_world.dt / curr_world.iters);
+						vel.mult(0.1f);
+						if(vel.length() > 3.0f)
 						{
-							Vec2d v = new Vec2d(p.vertices[i]);
-							b.localToWorld(v);
-							Vec2d vel = new Vec2d(v);
-							b.pointVelocityFromWorld(vel, curr_world.dt / curr_world.iters);
-							vel.mult(0.1f);
-							if(vel.length() > 3.0f)
-							{
-								vel.normalize();
-								vel.mult(3.0f);
-								g2.setColor(Color.RED);
-							}
-							vel.add(v);
-							
-							transform.project2D(v);
-							transform.project2D(vel);
-							
-							g2.drawLine((int)v.x, (int)v.y, (int) vel.x, (int) vel.y);
+							vel.normalize();
+							vel.mult(3.0f);
+							g2.setColor(Color.RED);
 						}
+						vel.add(v);
+						
+						transform.project2D(v);
+						transform.project2D(vel);
+						
+						g2.drawLine((int)v.x, (int)v.y, (int) vel.x, (int) vel.y);
 					}
-				});
-			}
+				}
+			});
 		}
 		
 		g2.setColor(Color.BLACK);
@@ -128,10 +128,6 @@ public class DebugInfo {
 		g2.drawString("-dynamic: " + curr_world.getDynamicBodySize(), 35, y += 20);
 		g2.drawString("-static: " + curr_world.getStaticBodySize(), 35, y += 20);
 		g2.drawString("collisions/frame: " + collisions, 20, y += 20);
-		g2.drawString("show centroid: " + show_centroid, 20, y += 20);
-		g2.drawString("show edge normals: " + show_edge_normals, 20, y += 20);
-		g2.drawString("show points of collision: " + show_poc, 20, y += 20);
-		g2.drawString("show vertex velocities: " + show_vertex_velocities, 20, y += 20);
 	}
 	public void restart()
 	{

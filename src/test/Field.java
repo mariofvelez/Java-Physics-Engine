@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferStrategy;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,7 +25,6 @@ import math.Transform;
 import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
-import test.tests.*;
 
 /**
  * 
@@ -58,6 +58,7 @@ public class Field extends Canvas
 	public static boolean dragging;
 	
 	Test test;
+	DebugInfo info;
 	
 	Random r = new Random();
 	
@@ -79,6 +80,8 @@ public class Field extends Canvas
 		refreshTime = (int) (1f/50 * 1000);
 
 		keysDown = new ArrayList<Integer>();
+		
+		info = new DebugInfo();
 		
 //		FortuneAlgorithm algo = new FortuneAlgorithm(v);
 //		algo.construct();
@@ -187,6 +190,22 @@ public class Field extends Canvas
 		Toolkit.getDefaultToolkit().sync();
 	}
 	
+	public void setTest(String class_name)
+	{
+		try {
+			Class<?> cls = Class.forName("test.tests." + class_name);
+			Constructor<?> ctr = cls.getConstructors()[0];
+			test = (Test) ctr.newInstance(this, info);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public DebugInfo getDebuginfo()
+	{
+		return info;
+	}
+	
 	int[] ms = new int[32];
 	float ms_avg = 0;
 	public void DoLogic() {
@@ -201,7 +220,7 @@ public class Field extends Canvas
 //		body_b.setRotationSpeed(body_b.getrotationSpeed() * 0.98f);
 		
 		if(test == null)
-			test = new FrictionTest(this);
+			setTest("FrictionTest");
 		
 		if(mouseDown != null)
 		{
@@ -215,6 +234,8 @@ public class Field extends Canvas
 			force.mult(5.0f);
 			body.applyForceWorld(pos, force);
 		}
+		
+		info.restart();
 		
 		long t1 = System.currentTimeMillis();
 		

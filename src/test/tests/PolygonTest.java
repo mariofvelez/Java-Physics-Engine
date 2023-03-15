@@ -11,6 +11,7 @@ import physics.CollisionInfo;
 import physics.CollisionListener;
 import physics.body.Body;
 import physics.body.CollisionType;
+import test.DebugInfo;
 import test.Field;
 import test.Test;
 
@@ -18,9 +19,9 @@ public class PolygonTest extends Test {
 	
 	Random r;
 	
-	public PolygonTest(Field field)
+	public PolygonTest(Field field, DebugInfo info)
 	{
-		super(field);
+		super(field, info);
 		
 		world.setGravity(new Vec2d(0, 550.0f));
 		world.iters = 32;
@@ -39,14 +40,9 @@ public class PolygonTest extends Test {
 		createPaddle(Vec2d.add(center, new Vec2d(len * 1.5f, -len * 2)), speed, len);
 		createPaddle(Vec2d.add(center, new Vec2d(-len * 2.0f, len / 2.0f)), speed, len);
 		createPaddle(Vec2d.add(center, new Vec2d(len * 2.0f, len / 2.0f)), -speed, len);
-		
-		info.curr_world = world;
-		info.show_poc = true;
-		info.show_centroid = true;
 	}
 	public void step()
 	{
-		info.restart();
 		world.forEachBody((body) -> {
 			if(body.getPositionUnmodifiable().y > 1000)
 				world.removeBody(body);
@@ -78,7 +74,7 @@ public class PolygonTest extends Test {
 		world.addBody(body);
 //		body.setRotation(r.nextFloat() * (float) Math.PI * 2);
 		body.restitution = 0.3f;
-		body.friction = 0.5f;
+		body.friction = 0.0f;
 //		body.group_filter = 1;
 //		body.collide_filter = 2;
 	}
@@ -141,8 +137,8 @@ public class PolygonTest extends Test {
 	}
 	private void setGroundParameters(Body b)
 	{
-		b.restitution = 0.9f;
-		b.friction = 0.5f;
+		b.restitution = 0.5f;
+		b.friction = 0.0f;
 	}
 	private void createPaddle(Vec2d pos, float speed, float len)
 	{

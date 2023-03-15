@@ -8,6 +8,7 @@ import math.MathConstant;
 import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
+import test.DebugInfo;
 import test.Field;
 import test.Test;
 
@@ -16,29 +17,23 @@ public class FrictionTest extends Test {
 	private float r = 0.5f;
 	private float r2 = 8.0f;
 
-	public FrictionTest(Field field)
+	public FrictionTest(Field field, DebugInfo info)
 	{
-		super(field);
+		super(field, info);
 		
-		transform.data[2] = 450;
-		transform.data[5] = 300;
+		transform.data[2] = field.getWidth() / 2.0f;
+		transform.data[5] = field.getHeight() / 2.0f;
 		transform.data[0] = 30;
 		transform.data[4] = -30;
 		
 		world.setGravity(new Vec2d(0.0f, -9.80665f));
 		world.iters = 128;
 		
-		info.curr_world = world;
-		info.show_poc = true;
-		info.show_centroid = true;
-		info.show_edge_normals = true;
-		info.show_vertex_velocities = true;
-		
 		createPlatform(new Vec2d(0, 3), -0.1f, r2);
 		
 		for(int i = 0; i < 6; ++i)
 		{
-			createCube(new Vec2d(3 - i * 1.5f, 4), i * 0.2f);
+			createCube(new Vec2d(3 - i * 1.5f, 4), i * 0.05f);
 		}
 		
 		createPlatform(new Vec2d(0, -1), -0.1f, r2);
@@ -90,7 +85,6 @@ public class FrictionTest extends Test {
 	}
 	public void step()
 	{
-		info.restart();
 		world.step();
 	}
 	public void draw(Graphics2D g2)
