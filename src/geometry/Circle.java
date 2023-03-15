@@ -186,8 +186,10 @@ public class Circle extends Shape2d {
 		transform.project2D(circle.pos);
 		axis.set(1, 0, 1);
 		transform.project3D(axis);
-		circle.radius = radius;
-		circle.radius2 = radius2;
+		Vec2d rad = new Vec2d(radius, 0);
+		transform.projectVector(rad);
+		circle.radius = rad.length();
+		circle.radius2 = rad.length2();
 		circle.area = area;
 	}
 	public void setAABB(AABB aabb)

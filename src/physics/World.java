@@ -298,25 +298,31 @@ public class World {
 		for(int i = 0; i < constraints.size(); ++i)
 			f.accept(constraints.get(i));
 	}
-	Vec2d ac = new Vec2d();
-	Vec2d bc = new Vec2d();
-	Vec2d rap = new Vec2d();
-	Vec2d rbp = new Vec2d();
-	Vec2d vap1 = new Vec2d();
-	Vec2d vbp1 = new Vec2d();
-	Vec2d na = new Vec2d();
-	Vec2d nb = new Vec2d();
-	Vec2d vab1 = new Vec2d();
-	Vec2d jn = new Vec2d();
-	Vec2d ia = new Vec2d();
-	Vec2d ja = new Vec2d();
-	Vec2d ib = new Vec2d();
-	Vec2d jb = new Vec2d();
+	private Vec2d ac = new Vec2d();
+	private Vec2d bc = new Vec2d();
+	private Vec2d rap = new Vec2d();
+	private Vec2d rbp = new Vec2d();
+	private Vec2d vap1 = new Vec2d();
+	private Vec2d vbp1 = new Vec2d();
+	private Vec2d vab1 = new Vec2d();
+	private Vec2d jn = new Vec2d();
+	private Vec2d ia = new Vec2d();
+	private Vec2d ib = new Vec2d();
 	
-	private void solveDSCollision(CollisionInfo info)
+	private float j;
+	private float j2;
+	
+	private Vec2d n = new Vec2d();
+	private Vec2d lat = new Vec2d();
+	private float ma;
+	private float mb;
+	private float wa1;
+	private float wb1;
+	
+	private void solveCollision(CollisionInfo info)
 	{
-		float ma = info.a.mass;
-		float mb = info.b.mass;
+		ma = info.a.mass;
+		mb = info.b.mass;
 		
 		Vec2d p = info.poc;
 		ac.set(info.a.centroid);
@@ -326,14 +332,14 @@ public class World {
 		rap.set(p.x - ac.x, p.y - ac.y);
 		rbp.set(p.x - bc.x, p.y - bc.y);
 		
-		float wa1 = info.a.getrotationSpeed();
-		float wb1 = info.b.getrotationSpeed();
+		wa1 = info.a.getrotationSpeed();
+		wb1 = info.b.getrotationSpeed();
 		
 		vap1.set(info.a.vel.x + (-wa1 * rap.y), info.a.vel.y + (wa1 * rap.x));
 		vbp1.set(info.b.vel.x + (-wb1 * rbp.y), info.b.vel.y + (wb1 * rbp.x));
 		
-		Vec2d n = info.normal;
-//		Vec2d lat = n.rightNormal();
+		n = info.normal; // collision normal
+		lat = n.rightNormal(); // collision tangent
 		
 		//must be negative
 		float na = Vec2d.dotProduct(n, vap1);
@@ -344,41 +350,54 @@ public class World {
 		if(na > nb)
 			return;
 		
-		float e = Math.min(info.a.restitution, info.b.restitution);
-		float f = Math.min(info.a.friction, info.b.friction);
+		float e = Math.min(info.a.restitution, info.b.restitution); // coefficient of restitution
+		
+		float u = Math.min(info.a.friction, info.b.friction); // coefficient of friction
 		
 		vab1.set(vap1.x - vbp1.x, vap1.y - vbp1.y);
-//		Vec2d vab1 = Vec2d.subtract(vap1, vbp1);
-		
 		
 		//impulse restitution
 		jn.set(vab1.x * -(1+e), vab1.y * -(1+e));
-		float j = Vec2d.dotProduct(jn, n);//Vec2d.mult(vab1, -(1 + e)), n);
+		j = Vec2d.dotProduct(jn, n);//Vec2d.mult(vab1, -(1 + e)), n);
+		
+		Vec2d jf = new Vec2d(vab1.x * -(1+u), vab1.y * -(1+u));
+		j2 = Vec2d.dotProduct(jf, lat);
+	}
+	private void updateBodyA(CollisionInfo info)
+	{
+		ia.set(n.x * j/ma, n.y * j/ma);
+		info.a.vel.add(ia);//Vec2d.mult(n, j / ma));
+		
+		ia.set(lat.x * j2/ma, lat.y * j2/ma);
+		info.a.vel.add(ia);
+//			info.a.vel.subtract(Vec2d.mult(lat, jf / ma));
+		info.a.setRotationSpeed(wa1 + (Vec2d.crossProduct(rap, Vec2d.mult(n, j)) + Vec2d.crossProduct(rap, Vec2d.mult(lat, j2)))/info.a.I);
+	}
+	private void updateBodyB(CollisionInfo info)
+	{
+		ib.set(n.x * j/mb, n.y * j/mb);
+		info.b.vel.subtract(ib);//Vec2d.mult(n, j / mb));
+		
+		ib.set(lat.x * j2/mb, lat.y * j2/mb);
+		info.b.vel.subtract(ib);
+//			info.b.vel.add(Vec2d.mult(lat, jf / mb));
+		info.b.setRotationSpeed(wb1 - (Vec2d.crossProduct(rbp, Vec2d.mult(n, j)) + Vec2d.crossProduct(rbp, Vec2d.mult(lat, j2)))/info.b.I);
+	}
+	private void solveDSCollision(CollisionInfo info)
+	{
+		solveCollision(info);
 		
 		float temp = Vec2d.crossProduct(rap, n);
-		float temp2 = Vec2d.crossProduct(rbp, n);
 		
 		j /= (1 / ma) + (temp*temp / info.a.I);
 		
 		//impulse friction
-//		
-//		float jf = Vec2d.dotProduct(Vec2d.mult(vab1, (1 - f)), lat);
-//		
-//		float temp3 = Vec2d.crossProduct(rap, lat);
-//		float temp4 = Vec2d.crossProduct(rbp, lat);
-//		
-//		float divf = 0;
-//		if(info.a.collision_type == CollisionType.DYNAMIC)
-//			divf += (1 / ma) + (temp3*temp3 / info.a.I);
-//		if(info.b.collision_type == CollisionType.DYNAMIC)
-//			divf += (1 / mb) + (temp4*temp4 / info.b.I);
-//		jf /= divf;
+		float temp2 = Vec2d.crossProduct(rap, lat);
+		
+		j2 /= (1 / ma) + (temp2*temp2 / info.a.I);
 		
 		//final velocity
-		ia.set(n.x * j/ma, n.y * j/ma);
-		info.a.vel.add(ia);//Vec2d.mult(n, j / ma));
-//			info.a.vel.subtract(Vec2d.mult(lat, jf / ma));
-		info.a.setRotationSpeed(wa1 + Vec2d.crossProduct(rap, Vec2d.mult(n, j))/info.a.I);
+		updateBodyA(info);
 	}
 	private void solveDDCollision(CollisionInfo info)
 	{
@@ -398,60 +417,7 @@ public class World {
 //		info.a.vel.set(Vec2d.add(Vec2d.mult(info.normal, v_1), Vec2d.mult(lat, l1)));
 //		info.b.vel.set(Vec2d.add(Vec2d.mult(info.normal, v_2), Vec2d.mult(lat, l2)));
 		
-		
-		float ma = info.a.mass;
-		float mb = info.b.mass;
-		
-		Vec2d p = info.poc;
-		ac.set(info.a.centroid);
-		info.a.localToWorld(ac); //TODO - store world coords of these in body
-		bc.set(info.b.centroid);
-		info.b.localToWorld(bc);
-		rap.set(p.x - ac.x, p.y - ac.y);
-		rbp.set(p.x - bc.x, p.y - bc.y);
-		
-		float wa1 = info.a.getrotationSpeed();
-		float wb1 = info.b.getrotationSpeed();
-		
-		vap1.set(info.a.vel.x + (-wa1 * rap.y), info.a.vel.y + (wa1 * rap.x));
-		vbp1.set(info.b.vel.x + (-wb1 * rbp.y), info.b.vel.y + (wb1 * rbp.x));
-//		Vec2d vap1 = Vec2d.add(info.a.vel, new Vec2d(-wa1 * rap.y, wa1 * rap.x));
-//		Vec2d vbp1 = Vec2d.add(info.b.vel, new Vec2d(-wb1 * rbp.y, wb1 * rbp.x));
-		
-//		if(Vec2d.dotProduct(vap1, vbp1) > 0f)
-//			return;
-		
-//		float d1 = Vec2d.dist(rap, rbp);
-//		Vec2d va = Vec2d.mult(vap1, 1f / 10000);
-//		Vec2d vb = Vec2d.mult(vbp1, 1f / 10000);
-//		Vec2d pa = Vec2d.add(rap, va);
-//		Vec2d pb = Vec2d.add(rbp, vb);
-//		float d2 = Vec2d.dist(pa, pb);
-//		if(d1 - d2 > 0)
-//			return;
-		
-		Vec2d n = info.normal;
-//		Vec2d lat = n.rightNormal();
-		
-		//must be negative
-		float na = Vec2d.dotProduct(n, vap1);
-		//must be positive
-		float nb = Vec2d.dotProduct(n, vbp1);
-		
-		//moving away from each other
-		if(na > nb)
-			return;
-		
-		float e = Math.min(info.a.restitution, info.b.restitution);
-		float f = Math.min(info.a.friction, info.b.friction);
-		
-		vab1.set(vap1.x - vbp1.x, vap1.y - vbp1.y);
-//		Vec2d vab1 = Vec2d.subtract(vap1, vbp1);
-		
-		
-		//impulse restitution
-		jn.set(vab1.x * -(1+e), vab1.y * -(1+e));
-		float j = Vec2d.dotProduct(jn, n);//Vec2d.mult(vab1, -(1 + e)), n);
+		solveCollision(info);
 		
 		float temp = Vec2d.crossProduct(rap, n);
 		float temp2 = Vec2d.crossProduct(rbp, n);
@@ -459,43 +425,14 @@ public class World {
 		j /= (1 / ma) + (temp*temp / info.a.I) + (1 / mb) + (temp2*temp2 / info.b.I);
 		
 		//impulse friction
-//		
-//		float jf = Vec2d.dotProduct(Vec2d.mult(vab1, (1 - f)), lat);
-//		
-//		float temp3 = Vec2d.crossProduct(rap, lat);
-//		float temp4 = Vec2d.crossProduct(rbp, lat);
-//		
-//		float divf = 0;
-//		if(info.a.collision_type == CollisionType.DYNAMIC)
-//			divf += (1 / ma) + (temp3*temp3 / info.a.I);
-//		if(info.b.collision_type == CollisionType.DYNAMIC)
-//			divf += (1 / mb) + (temp4*temp4 / info.b.I);
-//		jf /= divf;
+		float temp3 = Vec2d.crossProduct(rap, lat);
+		float temp4 = Vec2d.crossProduct(rbp, lat);
+		
+		j2 /= (1 / ma) + (temp3*temp3 / info.a.I) + (1 / mb) + (temp4*temp4 / info.b.I);
 		
 		//final velocity
-		ia.set(n.x * j/ma, n.y * j/ma);
-		info.a.vel.add(ia);//Vec2d.mult(n, j / ma));
-//			info.a.vel.subtract(Vec2d.mult(lat, jf / ma));
-		info.a.setRotationSpeed(wa1 + Vec2d.crossProduct(rap, Vec2d.mult(n, j))/info.a.I);		
-		
-		ib.set(n.x * j/mb, n.y * j/mb);
-		info.b.vel.subtract(ib);//Vec2d.mult(n, j / mb));
-//			info.b.vel.add(Vec2d.mult(lat, jf / mb));
-		info.b.setRotationSpeed(wb1 - Vec2d.crossProduct(rbp, Vec2d.mult(n, j))/info.b.I);
-		
-//		System.out.println("here");
-//		
-//		Vec2d v1 = new Vec2d(info.poc);
-//		Vec2d v2 = new Vec2d(info.poc);
-//		
-//		info.a.pointVelocityFromWorld(v1, dt);
-//		info.b.pointVelocityFromWorld(v2, dt);
-//		
-//		v1.mult(info.b.mass * 0.001f);
-//		v2.mult(info.a.mass * -0.001f);
-//				
-//		info.a.applyForceWorld(info.poc, v2);
-//		info.b.applyForceWorld(info.poc, v1);
+		updateBodyA(info);
+		updateBodyB(info);
 	}
 //	private Vec2d cross(Vec2d a, Vec2d b)
 //	{

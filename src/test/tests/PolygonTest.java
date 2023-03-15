@@ -9,7 +9,6 @@ import geometry.Polygon2d;
 import math.Vec2d;
 import physics.CollisionInfo;
 import physics.CollisionListener;
-import physics.World;
 import physics.body.Body;
 import physics.body.CollisionType;
 import test.Field;
@@ -23,7 +22,6 @@ public class PolygonTest extends Test {
 	{
 		super(field);
 		
-		world = new World();
 		world.setGravity(new Vec2d(0, 550.0f));
 		world.iters = 32;
 		
@@ -68,7 +66,7 @@ public class PolygonTest extends Test {
 				world.removeBody(body);
 		});
 		
-		if(world.getBodySize() < 100)
+		if(world.getBodySize() < 30)
 		{
 			createRandomPolygon();
 		}
@@ -114,7 +112,6 @@ public class PolygonTest extends Test {
 		
 		Polygon2d pbr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
 		Polygon2d pbl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
-		Polygon2d pt = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(50, 8));
 		Polygon2d pl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
 		Polygon2d pr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
 		
@@ -144,17 +141,17 @@ public class PolygonTest extends Test {
 		
 //		t.setRotationSpeed(2f);
 		
-		for(int i = 0; i < 38; ++i)
-		{
-			Body body = new Body(new Vec2d(size.width/2, size.height / 3 - i * 50), CollisionType.DYNAMIC);
-			body.restitution = 0.3f;
-			body.friction = 0.5f;
-			
-			Circle shape = new Circle(new Vec2d(), 20);
-			body.setShape(shape);
-			
-			world.addBody(body);
-		}
+//		for(int i = 0; i < 38; ++i)
+//		{
+//			Body body = new Body(new Vec2d(size.width/2, size.height / 3 - i * 50), CollisionType.DYNAMIC);
+//			body.restitution = 0.3f;
+//			body.friction = 0.5f;
+//			
+//			Circle shape = new Circle(new Vec2d(), 20);
+//			body.setShape(shape);
+//			
+//			world.addBody(body);
+//		}
 	}
 	private void setGroundParameters(Body b)
 	{

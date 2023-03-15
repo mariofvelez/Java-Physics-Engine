@@ -22,7 +22,6 @@ public class SpringTest extends Test {
 		transform.data[0] = 30;
 		transform.data[4] = -30;
 		
-		world = new World();
 		world.setGravity(new Vec2d(0.0f, -9.80665f));
 		world.iters = 16;
 		

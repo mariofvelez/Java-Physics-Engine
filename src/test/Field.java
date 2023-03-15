@@ -23,7 +23,7 @@ import geometry.Polygon2d;
 import math.Vec2d;
 import physics.body.Body;
 import physics.body.CollisionType;
-import test.tests.PolygonTest;
+import test.tests.*;
 
 /**
  * 
@@ -200,7 +200,7 @@ public class Field extends Canvas
 //		body_b.setRotationSpeed(body_b.getrotationSpeed() * 0.98f);
 		
 		if(test == null)
-			test = new PolygonTest(this);
+			test = new FrictionTest(this);
 		
 		if(mouseDown != null)
 		{
