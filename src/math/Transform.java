@@ -15,7 +15,7 @@ public class Transform {
 	 */
 	public float[] data;
 	/**
-	 * the origin of the transform
+	 * the dimensions of the transform
 	 */
 	protected int dim;
 	protected int len;
@@ -60,6 +60,15 @@ public class Transform {
 	{
 		for(int i = 0; i < len; i++)
 			data[i] = 0;
+	}
+	/**
+	 * Sets the last column for position values
+	 * @param x
+	 */
+	public void setPosition(float... x)
+	{
+		for(int i = 0; i < x.length; ++i)
+			data[i*dim + (dim-1)] = x[i];
 	}
 	/**
 	 * normalizes all the axes to unit vectors of length 1

@@ -70,22 +70,7 @@ public class PolygonTest extends Test {
 		
 		if(world.getBodySize() < 100)
 		{
-			Body body = new Body(new Vec2d(r.nextFloat() * 400 + field.getSize().width/2 - 200, r.nextFloat() * 100), CollisionType.DYNAMIC);
-			
-			Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
-			for(int x = 0; x < verts.length; ++x)
-			{
-				verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
-			}
-			Polygon2d p = new Polygon2d(verts);
-			body.setShape(p);
-			body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
-			world.addBody(body);
-//			body.setRotation(r.nextFloat() * (float) Math.PI * 2);
-			body.restitution = 0.3f;
-			body.friction = 0.5f;
-//			body.group_filter = 1;
-//			body.collide_filter = 2;
+			createRandomPolygon();
 		}
 		
 		world.step();
@@ -93,6 +78,25 @@ public class PolygonTest extends Test {
 	public void draw(Graphics2D g2)
 	{
 		super.debugDraw(g2);
+	}
+	public void createRandomPolygon()
+	{
+		Body body = new Body(new Vec2d(r.nextFloat() * 400 + field.getSize().width/2 - 200, r.nextFloat() * 100), CollisionType.DYNAMIC);
+		
+		Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
+		for(int x = 0; x < verts.length; ++x)
+		{
+			verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
+		}
+		Polygon2d p = new Polygon2d(verts);
+		body.setShape(p);
+		body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
+		world.addBody(body);
+//		body.setRotation(r.nextFloat() * (float) Math.PI * 2);
+		body.restitution = 0.3f;
+		body.friction = 0.5f;
+//		body.group_filter = 1;
+//		body.collide_filter = 2;
 	}
 	public void createGround(Dimension size)
 	{
