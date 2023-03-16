@@ -107,7 +107,7 @@ You can add as many bodies as you'd like, however the computation time scales qu
 
 # Things to Implement
 - Voronoi partitioning using Fortune's Algorithm
-- Collision optimization: impulse calculations and broad phase detection
+- Collision optimization: impulse calculations and broad phase detection, GJK implementation
 - Fix friction impulse
 - Ray and area querying
 - RK4 integration with constraints
