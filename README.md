@@ -118,3 +118,4 @@ You can add as many bodies as you'd like, however the computation time scales qu
 - FLIP fluids
 - Continuous Collision Detection
 - Soft bodies
+- Pathfinding
