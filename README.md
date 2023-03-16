@@ -104,3 +104,17 @@ You can add as many bodies as you'd like, however the computation time scales qu
 - Computational geometry - polygon and circle collision, as well as center of mass and moments of inertia
 - Linear algebra - matrix transforms, rotations
 - Implicit methods of integration - Euler, Runga-Kutta 4
+
+# Things to Implement
+- Voronoi partitioning using Fortune's Algorithm
+- Collision optimization: impulse calculations and broad phase detection
+- Fix friction impulse
+- Ray and area querying
+- RK4 integration with constraints
+- Hinge, distance, prismatic, gear, and other constraint implementation
+- Camera controls for testbed
+- World saving and loading from file
+- Level Editor
+- FLIP fluids
+- Continuous Collision Detection
+- Soft bodies
