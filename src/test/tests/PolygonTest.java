@@ -4,11 +4,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import geometry.Circle;
 import geometry.Polygon2d;
 import math.Vec2d;
-import physics.CollisionInfo;
-import physics.CollisionListener;
 import physics.body.Body;
 import physics.body.CollisionType;
 import test.DebugInfo;

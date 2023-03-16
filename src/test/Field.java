@@ -51,7 +51,7 @@ public class Field extends Canvas
 
 	private boolean running;
 	private int runTime;
-	private float seconds;
+	public float seconds;
 	private int refreshTime;
 	
 	public static int[] anchor = new  int[2];
@@ -315,14 +315,14 @@ public class Field extends Canvas
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (!keysDown.contains(e.getKeyCode()) && e.getKeyCode() != 86)
-			keysDown.add(new Integer(e.getKeyCode()));
+			keysDown.add(e.getKeyCode());
 		
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		keysDown.remove(new Integer(e.getKeyCode()));
+		keysDown.remove(e.getKeyCode());
 		
 	}
 

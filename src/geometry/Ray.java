@@ -14,8 +14,8 @@ public class Ray {
 	}
 	public float intersect(LineSegment segment)
 	{
-		Vec2d pointA = Vec2d.subtract(segment.a, origin);
-		Vec2d segVec = Vec2d.subtract(segment.b, segment.a);
+//		Vec2d pointA = Vec2d.subtract(segment.a, origin);
+//		Vec2d segVec = Vec2d.subtract(segment.b, segment.a);
 		return MAX_DISTANCE;
 	}
 	public float intersect(LineSegment[] segments)

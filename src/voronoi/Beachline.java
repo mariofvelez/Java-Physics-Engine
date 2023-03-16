@@ -1,6 +1,5 @@
 package voronoi;
 
-import data_structures.RedBlackNode;
 import data_structures.RedBlackTree;
 import math.Vec2d;
 

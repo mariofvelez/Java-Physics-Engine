@@ -384,7 +384,7 @@ public class Vec2d {
 	public static Vec2d[] getBezierPoints(int count, Vec2d... points)
 	{
 		Vec2d[] p1 = new Vec2d[count];
-		float dist = 1f / (points.length-1);
+//		float dist = 1f / (points.length-1);
 		p1[0] = new Vec2d(points[0]);
 		for(int i = 1; i < count-1; i++)
 			p1[i] = bezierLerp((float)i/count, points);
