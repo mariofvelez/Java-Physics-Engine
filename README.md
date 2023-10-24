@@ -70,7 +70,7 @@ body.setShape(circle); // attaches the circle to our body
 ```
 
 <h4> Polygon </h4>
-We create a polygon with an array of vectors relative to the body's position
+We create a polygon with an array of vectors relative to the body's position. Vertices must be defined counter-clockwise
 
 ```
 // in this instance we are creating a triangle
