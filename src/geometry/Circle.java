@@ -33,8 +33,8 @@ public class Circle extends Shape2d {
 	{
 		if(fill)
 		{
-//			g2.setColor(new Color(255, 127, 0, 100));
-			g2.setColor(Color.WHITE);
+			g2.setColor(new Color(255, 127, 0, 100));
+			//g2.setColor(Color.WHITE);
 			g2.fillOval((int) (pos.x-radius), (int) (pos.y-radius), (int) (radius*2), (int) (radius*2));
 			g2.setColor(Color.BLACK);
 		}
@@ -153,7 +153,10 @@ public class Circle extends Shape2d {
 	}
 	public void support(Vec2d axis, Vec2d point)
 	{
-		point.set(axis.x * radius, axis.y * radius);
+		Vec2d normalized = new Vec2d(axis);
+		normalized.normalize();
+		point.set(normalized.x * radius, normalized.y * radius);
+		point.add(pos);
 	}
 	public Vec2d distance(Vec2d point, boolean inside)
 	{

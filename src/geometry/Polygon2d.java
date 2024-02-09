@@ -45,8 +45,8 @@ public class Polygon2d extends Shape2d {
 		
 		if(fill)
 		{
-//			g2.setColor(new Color(255, 127, 0, 100));
-			g2.setColor(Color.WHITE);
+			g2.setColor(new Color(255, 127, 0, 100));
+			//g2.setColor(Color.WHITE);
 			g2.fillPolygon(px, py, vertices.length);
 		}
 		g2.setColor(Color.BLACK);
@@ -268,7 +268,7 @@ public class Polygon2d extends Shape2d {
 			float dot = Vec2d.dotProduct(axis, vertices[i]);
 			if(dot > max)
 			{
-				dot = max;
+				max = dot;
 				ind = i;
 			}
 		}
