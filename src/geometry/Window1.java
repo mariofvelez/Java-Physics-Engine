@@ -132,7 +132,6 @@ public class Window1 extends JFrame
 		
 		JButton gjk_button = new JButton("GJK step");
 		panel.add(gjk_button, gc);
-		gjk_button.addActionListener(e -> edit2.stepGJK());
 		
 		contentPane.add(panel, BorderLayout.EAST);
 		

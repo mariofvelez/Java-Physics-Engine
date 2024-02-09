@@ -11,6 +11,7 @@ A fully-functional physics engine built from scratch in Java.
 - Static (immovable) objects like walls and ground
 - Inertia, mass, and center of gravity
 - Object pooling for fast creation of bodies
+- GJK collision detection for arbitrary convex shapes
 
 # Getting Started
 <h3> Creating the World </h3>
@@ -98,16 +99,16 @@ Finally, we need to add our body to the world
 world.addBody(body);
 ```
 
-You can add as many bodies as you'd like, however the computation time scales quadratically (O(n^2) time) with dynamic bodies, and linearly (O(n) time) with static bodies. This will be improved later using a qaudtree
+You can add as many bodies as you'd like, however the computation time scales quadratically (O(n^2) time) with dynamic bodies, and linearly (O(n) time) with static bodies. This will be improved later using a Bounding Volume Hierarchy (BVH)
 
 # What I learned
-- Computational geometry - polygon and circle collision, as well as center of mass and moments of inertia
+- Computational geometry - SAT collision detection and response, Voronoi collision detection, center of mass and moment of inertia algorithms for polygons, and optimized GJK algorithm
 - Linear algebra - matrix transforms, rotations
 - Implicit methods of integration - Euler, Runga-Kutta 4
 
 # Things to Implement
 - Voronoi partitioning using Fortune's Algorithm
-- Collision optimization: impulse calculations and broad phase detection, GJK implementation
+- Collision optimization: impulse calculations and broad phase detection, enhanced GJK + EPA implementation
 - Fix friction impulse
 - Ray and area querying
 - RK4 integration with constraints

@@ -10,7 +10,7 @@ public class GJK {
 	static Simplex s = new Simplex();
 	static Vec2d D = new Vec2d(1.0f, 0.0f);
 	
-	public static boolean intersect(Shape2d a, Shape2d b) throws InterruptedException
+	public static boolean intersect(Shape2d a, Shape2d b)
 	{
 		
 		Vec2d A = support(a, b, new Vec2d(1.0f, 0.0f));
@@ -48,7 +48,7 @@ public class GJK {
 		return Vec2d.subtract(s, s2);
 	}
 	
-	private static boolean doSimplex(Simplex s, Vec2d d) throws InterruptedException
+	private static boolean doSimplex(Simplex s, Vec2d d)
 	{
 		switch(s.length)
 		{

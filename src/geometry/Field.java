@@ -96,9 +96,6 @@ public class Field extends Canvas
 	
 	public float intensity = 250; //light level of the light source
 	
-	Thread gjk_thread;
-	boolean gjk_running = true;
-	
 	public Field(Dimension size) throws Exception {
 		this.setPreferredSize(size);
 		this.addKeyListener(this);
@@ -165,30 +162,6 @@ public class Field extends Canvas
 //		
 //		g2.drawPolyline(Vec2d.xPoints(v), Vec2d.yPoints(v), v.length);
 //		g2.dispose();
-		
-		gjk_thread = new Thread(new Runnable() {
-			public void run() {
-				synchronized (gjk_thread) {
-				while(gjk_running)
-				{
-					try {
-						System.out.println("new intersection test");
-						GJK.intersect(shapes[0], shapes[1]);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				}
-			}
-		});
-		//gjk_thread.start();
-	}
-	public void stepGJK()
-	{
-		synchronized (gjk_thread) {
-			gjk_thread.notify();			
-		}
 	}
 	private static final int BLACK = 0b11111111000000000000000000000000;
 	public void computeRayMarching()
@@ -441,7 +414,6 @@ public class Field extends Canvas
 			else
 				refreshTime ++;
 		}
-		gjk_running = false;
 	}
 
 	public void DrawBackbufferToScreen() {
