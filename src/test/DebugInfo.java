@@ -23,6 +23,9 @@ public class DebugInfo {
 	public boolean show_poc = false;
 	public boolean show_vertex_velocities = false;
 	public boolean show_aabbs = false;
+	public boolean show_aabb_tree = false;
+	
+	public boolean is_paused = false;
 	
 	public void beforeSolve(CollisionInfo info)
 	{
@@ -120,6 +123,10 @@ public class DebugInfo {
 					}
 				}
 			});
+		}
+		if(show_aabb_tree)
+		{
+			curr_world.getTree().debugDraw(g2, transform);
 		}
 		if(show_aabbs)
 		{

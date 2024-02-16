@@ -37,6 +37,15 @@ public class AABB {
 		this.min_y = other.min_y;
 		this.max_y = other.max_y;
 	}
+	public static AABB combine(AABB a, AABB b)
+	{
+		float min_x = Math.min(a.min_x, b.min_x);
+		float max_x = Math.max(a.max_x, b.max_x);
+		float min_y = Math.min(a.min_y, b.min_y);
+		float max_y = Math.max(a.max_y, b.max_y);
+		
+		return new AABB(min_x, max_x, min_y, max_y);
+	}
 	/**
 	 * Draws to the Graphics2D buffer
 	 * @param g2 - the graphics to draw on
