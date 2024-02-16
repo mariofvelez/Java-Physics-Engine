@@ -106,8 +106,15 @@ public class Window extends JFrame
 			field.getDebuginfo().show_vertex_velocities = show_vertex_vel_check.isSelected();
 		});
 		gc.gridy = 4;
-		gc.weighty = 1;
 		debug_panel.add(show_vertex_vel_check, gc);
+		
+		JCheckBox show_aabb_check = new JCheckBox("Show AABBs");
+		show_aabb_check.addActionListener(e -> {
+			field.getDebuginfo().show_aabbs = show_aabb_check.isSelected();
+		});
+		gc.gridy = 5;
+		gc.weighty = 1;
+		debug_panel.add(show_aabb_check, gc);
 		
 		window.add(debug_panel, BorderLayout.EAST);
 		

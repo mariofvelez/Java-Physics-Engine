@@ -3,6 +3,7 @@ package physics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
+import math.Transform;
 import math.Transform2d;
 import math.Vec2d;
 
@@ -46,6 +47,18 @@ public class AABB {
 		Vec2d[] vecs = getBoxCoordinates();
 		for(int i = 0; i < vecs.length; i++)
 			vecs[i] = transform.projectToTransform(vecs[i]);
+		g2.drawPolygon(Vec2d.xPoints(vecs), Vec2d.yPoints(vecs), vecs.length);
+	}
+	/**
+	 * Draws to the Graphics2D buffer
+	 * @param g2 - the graphics to draw on
+	 * @param transform - the transform
+	 */
+	public void debugDraw(Graphics2D g2, Transform transform)
+	{
+		Vec2d[] vecs = getBoxCoordinates();
+		for(int i = 0; i < vecs.length; i++)
+			transform.project2D(vecs[i]);
 		g2.drawPolygon(Vec2d.xPoints(vecs), Vec2d.yPoints(vecs), vecs.length);
 	}
 	/**
