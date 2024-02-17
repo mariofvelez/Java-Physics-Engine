@@ -58,6 +58,7 @@ public class Window extends JFrame
 		gc.insets = new Insets(5, 5, 5, 5);
 		gc.gridx = 0;
 		gc.gridy = 0;
+		gc.gridwidth = 3;
 		gc.weighty = 0;
 		
 		JComboBox<String> tests_combo = new JComboBox<String>();
@@ -86,6 +87,7 @@ public class Window extends JFrame
 			field.getDebuginfo().show_centroid = show_centroid_check.isSelected();
 		});
 		gc.gridy = 1;
+		gc.gridwidth = 2;
 		debug_panel.add(show_centroid_check, gc);
 		
 		JCheckBox show_edge_normals_check = new JCheckBox("Show Edge Normals");
@@ -123,6 +125,22 @@ public class Window extends JFrame
 		gc.gridy = 6;
 		debug_panel.add(show_aabb_tree_check, gc);
 		
+		JButton increase_aabb_tree_level_button = new JButton("Inc");
+		increase_aabb_tree_level_button.addActionListener(e -> {
+			field.getDebuginfo().show_aabb_tree_level++;
+		});
+		gc.gridy = 7;
+		gc.gridwidth = 1;
+		debug_panel.add(increase_aabb_tree_level_button, gc);
+		
+		JButton decease_aabb_tree_level_button = new JButton("Dec");
+		decease_aabb_tree_level_button.addActionListener(e -> {
+			field.getDebuginfo().show_aabb_tree_level--;
+		});
+		gc.gridx = 1;
+		gc.gridy = 7;
+		debug_panel.add(decease_aabb_tree_level_button, gc);
+		
 		JButton pause_button = new JButton("Pause");
 		pause_button.addActionListener(e -> {
 			if(pause_button.getText() == "Pause")
@@ -136,7 +154,9 @@ public class Window extends JFrame
 				field.getDebuginfo().is_paused = false;
 			}
 		});
-		gc.gridy = 7;
+		gc.gridx = 0;
+		gc.gridy = 8;
+		gc.gridwidth = 2;
 		debug_panel.add(pause_button, gc);
 		
 		JButton step_button = new JButton("Step");
@@ -144,7 +164,7 @@ public class Window extends JFrame
 			if(field.getDebuginfo().is_paused)
 				field.test.step();
 		});
-		gc.gridy = 8;
+		gc.gridy = 9;
 		gc.weighty = 1;
 		debug_panel.add(step_button, gc);
 		

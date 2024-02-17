@@ -24,6 +24,7 @@ public class DebugInfo {
 	public boolean show_vertex_velocities = false;
 	public boolean show_aabbs = false;
 	public boolean show_aabb_tree = false;
+	public int show_aabb_tree_level = 1;
 	
 	public boolean is_paused = false;
 	
@@ -126,7 +127,7 @@ public class DebugInfo {
 		}
 		if(show_aabb_tree)
 		{
-			curr_world.getTree().debugDraw(g2, transform);
+			curr_world.getTree().debugDraw(g2, transform, show_aabb_tree_level);
 		}
 		if(show_aabbs)
 		{

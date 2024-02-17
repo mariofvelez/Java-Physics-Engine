@@ -202,9 +202,14 @@ public class World {
 			{
 				//dynamic
 				Body body = d_bodies.get(i);
-				for(int j = 0; j < i; ++j)
+				ArrayList<Body> others = aabb_tree.getCollideList(body.aabb);
+				for(int j = 0; j < others.size(); ++j)
 				{
 					Body other = d_bodies.get(j);
+					if(body == other)
+						continue;
+					if(other.getCollisionType() == CollisionType.STATIC)
+						continue;
 				
 					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
 									  (body.group_filter & other.collide_filter) != 0;
@@ -213,8 +218,8 @@ public class World {
 					
 					Vec2d poi = new Vec2d(0, 0);
 					
-					if(!body.aabb.intersects(other.aabb))
-						continue;
+					//if(!body.aabb.intersects(other.aabb))
+					//	continue;
 					
 					Vec2d move = Geometry.intersectionNormal(body.shape_proj, other.shape_proj, poi);
 					

@@ -25,6 +25,8 @@ public abstract class Test {
 	
 	protected DebugInfo info;
 	
+	protected Vec2d mouse;
+	
 	public Test(Field field, DebugInfo info)
 	{
 		this.field = field;
@@ -50,6 +52,20 @@ public abstract class Test {
 			}
 		};
 		world.setCollisionListener(listener);
+		
+		mouse = new Vec2d(0.0f, 0.0f);
+	}
+	public void onMouseDown(Vec2d mouse)
+	{
+		
+	}
+	public void onMouseUp(Vec2d mouse)
+	{
+		
+	}
+	public void onMouseMove(Vec2d mouse)
+	{
+		this.mouse.set(mouse);
 	}
 	
 	public abstract void step();
