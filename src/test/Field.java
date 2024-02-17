@@ -222,7 +222,7 @@ public class Field extends Canvas
 		if(test == null)
 			setTest("FrictionTest");
 		
-		if(mouseDown != null)
+		if(!info.is_paused && mouseDown != null)
 		{
 			Vec2d pos = new Vec2d(mouseDown);
 			body.localToWorld(pos);
@@ -239,7 +239,8 @@ public class Field extends Canvas
 		
 		long t1 = System.currentTimeMillis();
 		
-		test.step();
+		if(!info.is_paused)
+			test.step();
 		
 		long t2 = System.currentTimeMillis();
 		
@@ -424,6 +425,26 @@ public class Field extends Canvas
 	public void mouseDragged(MouseEvent e) {
 		if(leftClick)
 			leftClick = true;
+		
+		if(info.is_paused && mouseDown != null)
+		{
+			Vec2d old_mouse = new Vec2d(mousex, mousey);
+			Vec2d new_mouse = new Vec2d(e.getX(), e.getY());
+			
+			Transform inverse = new Transform(test.transform);
+			test.transform.invert3x3(inverse);
+			
+			inverse.project2D(old_mouse);
+			inverse.project2D(new_mouse);
+			
+			Vec2d dir = Vec2d.subtract(new_mouse, old_mouse);
+			body.move(dir);
+			body.updateAABB();
+			body.updateProject();
+			body.vel.setZero();
+			body.setRotationSpeed(0);
+		}
+		
 		mousex = e.getX();
 		mousey = e.getY();
 	}

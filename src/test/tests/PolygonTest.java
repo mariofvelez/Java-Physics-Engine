@@ -1,6 +1,5 @@
 package test.tests;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.Random;
 
@@ -20,32 +19,35 @@ public class PolygonTest extends Test {
 	{
 		super(field, info);
 		
-		world.setGravity(new Vec2d(0, 550.0f));
-		world.iters = 32;
+		world.setGravity(new Vec2d(0, -9.80665f));
+		world.iters = 128;
 		
 		r = new Random();
 		
-		Vec2d size = new Vec2d(field.getSize().width, field.getSize().height);
+		transform.data[2] = field.getWidth() / 2.0f;
+		transform.data[5] = field.getHeight() / 2.0f;
+		transform.data[0] = 30;
+		transform.data[4] = -30;
 		
-		createGround(field.getSize());
+		float speed = -4;
+		float len = 2.0f;
+		float paddle_height = 2.0f;
 		
-		float speed = -7;
-		float len = size.x / 18.0f;
-		Vec2d center = Vec2d.mult(size, 0.5f);
+		createPaddle(new Vec2d(-len * 1.5f, -len * 2 + paddle_height), -speed, len);
+		createPaddle(new Vec2d(len * 1.5f, -len * 2 + paddle_height), speed, len);
+		createPaddle(new Vec2d(-len * 2.0f, len / 2.0f + paddle_height), speed, len);
+		createPaddle(new Vec2d(len * 2.0f, len / 2.0f + paddle_height), -speed, len);
 		
-		createPaddle(Vec2d.add(center, new Vec2d(-len * 1.5f, -len * 2)), -speed, len);
-		createPaddle(Vec2d.add(center, new Vec2d(len * 1.5f, -len * 2)), speed, len);
-		createPaddle(Vec2d.add(center, new Vec2d(-len * 2.0f, len / 2.0f)), speed, len);
-		createPaddle(Vec2d.add(center, new Vec2d(len * 2.0f, len / 2.0f)), -speed, len);
+		createGround();
 	}
 	public void step()
 	{
 		world.forEachBody((body) -> {
-			if(body.getPositionUnmodifiable().y > 1000)
+			if(body.getPositionUnmodifiable().y < -20)
 				world.removeBody(body);
 		});
 		
-		if(world.getBodySize() < 30)
+		if(world.getBodySize() < 50)
 		{
 			createRandomPolygon();
 		}
@@ -58,65 +60,72 @@ public class PolygonTest extends Test {
 	}
 	public void createRandomPolygon()
 	{
-		Body body = new Body(new Vec2d(r.nextFloat() * 400 + field.getSize().width/2 - 200, r.nextFloat() * 100), CollisionType.DYNAMIC);
+		Body body = new Body(new Vec2d(r.nextFloat() * 10.0f - 5.0f, 8.0f), CollisionType.DYNAMIC);
 		
 		Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
 		for(int x = 0; x < verts.length; ++x)
 		{
-			verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 10 + 20);
+			verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2 + Math.PI/4, r.nextFloat() * 0.2f + 0.6f);
 		}
 		Polygon2d p = new Polygon2d(verts);
 		body.setShape(p);
-		body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
+		//body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
 		world.addBody(body);
 //		body.setRotation(r.nextFloat() * (float) Math.PI * 2);
 		body.restitution = 0.0f;
-		body.friction = 0.0f;
+		body.friction = 0.5f;
 //		body.group_filter = 1;
 //		body.collide_filter = 2;
 	}
-	public void createGround(Dimension size)
+	public void createGround()
 	{
+		Body ground = new Body(new Vec2d(0.0f, -5.0f), CollisionType.STATIC);
+		Polygon2d pground = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(10.0f, 0.5f));
+		
+		ground.setShape(pground);
+		
+		setGroundParameters(ground);
+		world.addBody(ground);
 //		Body b = new Body(new Vec2d(size.width / 2, size.height - 60), CollisionType.STATIC);
-		Body br = new Body(new Vec2d(size.width - size.width / 4 + 20, size.height - 160), CollisionType.STATIC);
-		Body bl = new Body(new Vec2d(size.width / 4 - 40, size.height - 160), CollisionType.STATIC);
-//		Body t = new Body(new Vec2d(size.width / 2, size.height / 2), CollisionType.STATIC);
-		Body l = new Body(new Vec2d(20, size.height / 2), CollisionType.STATIC);
-		Body r = new Body(new Vec2d(size.width - 20, size.height / 2), CollisionType.STATIC);
-		
-//		br.group_filter = 2;
-//		bl.group_filter = 2;
-//		l.group_filter = 2;
-//		r.group_filter = 2;
-		
-		Polygon2d pbr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
-		Polygon2d pbl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
-		Polygon2d pl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
-		Polygon2d pr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
-		
-		br.setRotation(-0.2f);
-		bl.setRotation(0.2f);
-//		b.setShape(pb);
-		br.setShape(pbr);
-		bl.setShape(pbl);
-//		t.setShape(pt);
-		l.setShape(pl);
-		r.setShape(pr);
-		
-//		setGroundParameters(b);
-		setGroundParameters(br);
-		setGroundParameters(bl);
-//		setGroundParameters(t);
-		setGroundParameters(l);
-		setGroundParameters(r);
-		
-		
-//		world.addBody(b);
-		world.addBody(br);
-		world.addBody(bl);
-//		world.addBody(t);
-		world.addBody(l);
-		world.addBody(r);
+//		Body br = new Body(new Vec2d(size.width - size.width / 4 + 20, size.height - 160), CollisionType.STATIC);
+//		Body bl = new Body(new Vec2d(size.width / 4 - 40, size.height - 160), CollisionType.STATIC);
+////		Body t = new Body(new Vec2d(size.width / 2, size.height / 2), CollisionType.STATIC);
+//		Body l = new Body(new Vec2d(20, size.height / 2), CollisionType.STATIC);
+//		Body r = new Body(new Vec2d(size.width - 20, size.height / 2), CollisionType.STATIC);
+//		
+////		br.group_filter = 2;
+////		bl.group_filter = 2;
+////		l.group_filter = 2;
+////		r.group_filter = 2;
+//		
+//		Polygon2d pbr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
+//		Polygon2d pbl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(size.width / 4 - 40, 20));
+//		Polygon2d pl = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
+//		Polygon2d pr = Polygon2d.createAsBox(Vec2d.ZERO, new Vec2d(20, size.height / 2));
+//		
+//		br.setRotation(-0.2f);
+//		bl.setRotation(0.2f);
+////		b.setShape(pb);
+//		br.setShape(pbr);
+//		bl.setShape(pbl);
+////		t.setShape(pt);
+//		l.setShape(pl);
+//		r.setShape(pr);
+//		
+////		setGroundParameters(b);
+//		setGroundParameters(br);
+//		setGroundParameters(bl);
+////		setGroundParameters(t);
+//		setGroundParameters(l);
+//		setGroundParameters(r);
+//		
+//		
+////		world.addBody(b);
+//		world.addBody(br);
+//		world.addBody(bl);
+////		world.addBody(t);
+//		world.addBody(l);
+//		world.addBody(r);
 		
 //		t.setRotationSpeed(2f);
 		
@@ -135,7 +144,7 @@ public class PolygonTest extends Test {
 	private void setGroundParameters(Body b)
 	{
 		b.restitution = 0.5f;
-		b.friction = 0.0f;
+		b.friction = 0.5f;
 	}
 	private void createPaddle(Vec2d pos, float speed, float len)
 	{

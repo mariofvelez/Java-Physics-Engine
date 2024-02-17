@@ -22,6 +22,10 @@ public class DebugInfo {
 	public boolean show_edge_normals = false;
 	public boolean show_poc = false;
 	public boolean show_vertex_velocities = false;
+	public boolean show_aabbs = false;
+	public boolean show_aabb_tree = false;
+	
+	public boolean is_paused = false;
 	
 	public void beforeSolve(CollisionInfo info)
 	{
@@ -118,6 +122,17 @@ public class DebugInfo {
 						g2.drawLine((int)v.x, (int)v.y, (int) vel.x, (int) vel.y);
 					}
 				}
+			});
+		}
+		if(show_aabb_tree)
+		{
+			curr_world.getTree().debugDraw(g2, transform);
+		}
+		if(show_aabbs)
+		{
+			g2.setColor(Color.BLUE);
+			curr_world.forEachBody(b -> {
+				b.aabb.debugDraw(g2, transform);
 			});
 		}
 		

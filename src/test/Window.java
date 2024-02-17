@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -67,6 +68,7 @@ public class Window extends JFrame
 		tests_model.addElement("Polygon Test");
 		tests_model.addElement("Spring Test");
 		tests_model.addElement("Voronoi Test");
+		tests_model.addElement("Pyramid Test");
 		
 		tests_combo.setModel(tests_model);
 		tests_combo.setSelectedIndex(1);
@@ -106,8 +108,46 @@ public class Window extends JFrame
 			field.getDebuginfo().show_vertex_velocities = show_vertex_vel_check.isSelected();
 		});
 		gc.gridy = 4;
-		gc.weighty = 1;
 		debug_panel.add(show_vertex_vel_check, gc);
+		
+		JCheckBox show_aabb_check = new JCheckBox("Show AABBs");
+		show_aabb_check.addActionListener(e -> {
+			field.getDebuginfo().show_aabbs = show_aabb_check.isSelected();
+		});
+		gc.gridy = 5;
+		debug_panel.add(show_aabb_check, gc);
+		
+		JCheckBox show_aabb_tree_check = new JCheckBox("Show BVH");
+		show_aabb_tree_check.addActionListener(e -> {
+			field.getDebuginfo().show_aabb_tree = show_aabb_tree_check.isSelected();
+		});
+		gc.gridy = 6;
+		debug_panel.add(show_aabb_tree_check, gc);
+		
+		JButton pause_button = new JButton("Pause");
+		pause_button.addActionListener(e -> {
+			if(pause_button.getText() == "Pause")
+			{
+				pause_button.setText("Play");
+				field.getDebuginfo().is_paused = true;
+			}
+			else
+			{
+				pause_button.setText("Pause");
+				field.getDebuginfo().is_paused = false;
+			}
+		});
+		gc.gridy = 7;
+		debug_panel.add(pause_button, gc);
+		
+		JButton step_button = new JButton("Step");
+		step_button.addActionListener(e -> {
+			if(field.getDebuginfo().is_paused)
+				field.test.step();
+		});
+		gc.gridy = 8;
+		gc.weighty = 1;
+		debug_panel.add(step_button, gc);
 		
 		window.add(debug_panel, BorderLayout.EAST);
 		

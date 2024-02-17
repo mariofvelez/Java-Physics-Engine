@@ -3,6 +3,7 @@ package physics;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import data_structures.BinaryTree;
 import geometry.Geometry;
 import geometry.Shape2d;
 import math.Vec2d;
@@ -43,6 +44,8 @@ public class World {
 	private ArrayList<Body> remove_list;
 	private ArrayList<Constraint> constraint_remove_list;
 	
+	private AABBTree aabb_tree;
+	
 	public World()
 	{
 		d_bodies = new ArrayList<>();
@@ -54,6 +57,8 @@ public class World {
 		
 		remove_list = new ArrayList<>();
 		constraint_remove_list = new ArrayList<>();
+		
+		aabb_tree = new AABBTree();
 	}
 	/**
 	 * 
@@ -164,6 +169,8 @@ public class World {
 				constraints.get(i).solve(dt / iters);
 			}
 			
+			aabb_tree = new AABBTree();
+			
 			for(int i = 0; i < s_bodies.size(); ++i)
 			{
 				Body body = s_bodies.get(i);
@@ -172,6 +179,9 @@ public class World {
 				body.updateProject();
 				
 				body.updateAABB();
+				
+				// insert into aabb tree
+				aabb_tree.addAABB(body.aabb, body);
 			}
 			
 			for(int i = 0; i < d_bodies.size(); ++i)
@@ -183,6 +193,9 @@ public class World {
 				body.updateProject();
 				
 				body.updateAABB();
+				
+				// insert into aabb tree
+				aabb_tree.addAABB(body.aabb, body);
 			}
 			
 			for(int i = 0; i < d_bodies.size(); ++i)
@@ -305,6 +318,14 @@ public class World {
 	{
 		for(int i = 0; i < constraints.size(); ++i)
 			f.accept(constraints.get(i));
+	}
+	/**
+	 * Gets the acceleration structure of this world
+	 * @returns the AABB BVH tree
+	 */
+	public AABBTree getTree()
+	{
+		return aabb_tree;
 	}
 	private Vec2d ac = new Vec2d();
 	private Vec2d bc = new Vec2d();
@@ -442,11 +463,4 @@ public class World {
 		updateBodyA(info);
 		updateBodyB(info);
 	}
-//	private Vec2d cross(Vec2d a, Vec2d b)
-//	{
-//		a.y*b.z - a.z*b.y,
-//		a.z*b.x - a.x*b.z,
-//		a.x*b.y - a.y*b.x
-//		return new Vec2d(-);
-//	}
 }

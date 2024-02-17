@@ -3,6 +3,7 @@ package physics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
+import math.Transform;
 import math.Transform2d;
 import math.Vec2d;
 
@@ -36,6 +37,15 @@ public class AABB {
 		this.min_y = other.min_y;
 		this.max_y = other.max_y;
 	}
+	public static AABB combine(AABB a, AABB b)
+	{
+		float min_x = Math.min(a.min_x, b.min_x);
+		float max_x = Math.max(a.max_x, b.max_x);
+		float min_y = Math.min(a.min_y, b.min_y);
+		float max_y = Math.max(a.max_y, b.max_y);
+		
+		return new AABB(min_x, max_x, min_y, max_y);
+	}
 	/**
 	 * Draws to the Graphics2D buffer
 	 * @param g2 - the graphics to draw on
@@ -46,6 +56,18 @@ public class AABB {
 		Vec2d[] vecs = getBoxCoordinates();
 		for(int i = 0; i < vecs.length; i++)
 			vecs[i] = transform.projectToTransform(vecs[i]);
+		g2.drawPolygon(Vec2d.xPoints(vecs), Vec2d.yPoints(vecs), vecs.length);
+	}
+	/**
+	 * Draws to the Graphics2D buffer
+	 * @param g2 - the graphics to draw on
+	 * @param transform - the transform
+	 */
+	public void debugDraw(Graphics2D g2, Transform transform)
+	{
+		Vec2d[] vecs = getBoxCoordinates();
+		for(int i = 0; i < vecs.length; i++)
+			transform.project2D(vecs[i]);
 		g2.drawPolygon(Vec2d.xPoints(vecs), Vec2d.yPoints(vecs), vecs.length);
 	}
 	/**
