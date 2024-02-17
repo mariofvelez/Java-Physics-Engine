@@ -180,6 +180,18 @@ public class Vec3d extends Vec2d {
 		avg.mult(1f/vecs.length);
 		return avg;
 	}
+	/**
+	 * 
+	 * @param a - the first vector
+	 * @param b - the second vector
+	 * @param dist - a value between 0 and 1 which represents the distance from a to b
+	 * @returns the interpolated value between the two vectors
+	 */
+	public static Vec3d lerp(Vec3d a, Vec3d b, float dist)
+	{
+		Vec3d lerped = new Vec3d(a.x + (b.x-a.x)*dist, a.y + (b.y-a.y)*dist, a.z + (b.z-a.z)*dist);
+		return lerped;
+	}
 	public static float areaOfTriangle(Vec3d a, Vec3d b, Vec3d c)
 	{
 		Vec3d cross = new Vec3d(

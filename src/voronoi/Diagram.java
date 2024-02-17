@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import geometry.Polygon2d;
+import math.Transform;
 import math.Vec2d;
 
 public class Diagram {
@@ -75,6 +76,31 @@ public class Diagram {
 			{
 				if(edge.origin != null && edge.destination != null)
 				g2.drawLine((int) edge.origin.x, (int) edge.origin.y, (int) edge.destination.x, (int) edge.destination.y);
+			}
+		}
+	}
+	public void draw(Graphics2D g2, Transform transform)
+	{
+		for(int i = 0; i < vertices.size(); ++i)
+		{
+			Vec2d v = new Vec2d(vertices.get(i));
+			transform.project2D(v);
+			v.debugDraw(g2, 3);
+		}
+		
+		for(int i = 0; i < faces.size(); ++i)
+		{
+			Face face = faces.get(i);
+			for(HalfEdge edge = face.outer; edge != null; edge = edge.next)
+			{
+				if(edge.origin != null && edge.destination != null)
+				{
+					Vec2d origin = new Vec2d(edge.origin);
+					Vec2d destination = new Vec2d(edge.destination);
+					transform.project2D(origin);
+					transform.project2D(destination);
+					g2.drawLine((int) origin.x, (int) origin.y, (int) destination.x, (int) destination.y);
+				}
 			}
 		}
 	}
