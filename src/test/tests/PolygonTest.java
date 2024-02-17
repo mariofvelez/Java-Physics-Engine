@@ -70,7 +70,7 @@ public class PolygonTest extends Test {
 		body.vel.set(r.nextFloat() * 400 - 200, r.nextFloat() * 200);
 		world.addBody(body);
 //		body.setRotation(r.nextFloat() * (float) Math.PI * 2);
-		body.restitution = 0.3f;
+		body.restitution = 0.0f;
 		body.friction = 0.0f;
 //		body.group_filter = 1;
 //		body.collide_filter = 2;

@@ -66,6 +66,7 @@ public class Window extends JFrame
 		tests_model.addElement("Friction Test");
 		tests_model.addElement("Polygon Test");
 		tests_model.addElement("Spring Test");
+		tests_model.addElement("Voronoi Test");
 		
 		tests_combo.setModel(tests_model);
 		tests_combo.setSelectedIndex(1);
