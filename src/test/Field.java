@@ -370,29 +370,35 @@ public class Field extends Canvas
 					break;
 				}
 			}
-			if(!grabbed)
-			{
-				Body body = new Body(new Vec2d(mousex, mousey), CollisionType.DYNAMIC);
-				
-				if(r.nextBoolean())
-				{
-					Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
-					for(int x = 0; x < verts.length; ++x)
-					{
-						verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2, r.nextFloat() * 10 + 20);
-					}
-					Polygon2d p = new Polygon2d(verts);
-					body.setShape(p);
-				}
-				else
-				{
-					Circle c = new Circle(new Vec2d(), r.nextFloat() * 10 + 20);
-					body.setShape(c);
-				}
-				test.world.addBody(body);
-//				body.setRotation(r.nextFloat() * (float) Math.PI * 2);
-				body.restitution = 0.5f;
-			}
+//			if(!grabbed)
+//			{
+//				Body body = new Body(new Vec2d(mousex, mousey), CollisionType.DYNAMIC);
+//				
+//				if(r.nextBoolean())
+//				{
+//					Vec2d[] verts = new Vec2d[(int) (r.nextFloat() * 6) + 3];
+//					for(int x = 0; x < verts.length; ++x)
+//					{
+//						verts[x] = Vec2d.fromPolar(((float) x / verts.length) * Math.PI * 2, r.nextFloat() * 10 + 20);
+//					}
+//					Polygon2d p = new Polygon2d(verts);
+//					body.setShape(p);
+//				}
+//				else
+//				{
+//					Circle c = new Circle(new Vec2d(), r.nextFloat() * 10 + 20);
+//					body.setShape(c);
+//				}
+//				test.world.addBody(body);
+////				body.setRotation(r.nextFloat() * (float) Math.PI * 2);
+//				body.restitution = 0.5f;
+//			}
+			
+			Vec2d mouse_pos = new Vec2d(mousex, mousey);
+			Transform inverse = new Transform(test.transform);
+			test.transform.invert3x3(inverse);
+			inverse.project2D(mouse_pos);
+			test.onMouseDown(mouse_pos);
 			
 		}
 		else if(e.getButton() == 2)
@@ -416,6 +422,12 @@ public class Field extends Canvas
 			
 			mouseDown = null;
 			body = null;
+			
+			Vec2d mouse_pos = new Vec2d(mousex, mousey);
+			Transform inverse = new Transform(test.transform);
+			test.transform.invert3x3(inverse);
+			inverse.project2D(mouse_pos);
+			test.onMouseUp(mouse_pos);
 		}
 		if(e.getButton() == 2)
 			dragging = false;
@@ -453,6 +465,15 @@ public class Field extends Canvas
 	public void mouseMoved(MouseEvent e) {
 		mousex = e.getX();
 		mousey = e.getY();
+		
+		if(test != null)
+		{
+			Vec2d mouse_pos = new Vec2d(mousex, mousey);
+			Transform inverse = new Transform(test.transform);
+			test.transform.invert3x3(inverse);
+			inverse.project2D(mouse_pos);
+			test.onMouseMove(mouse_pos);
+		}
 	}
 
 	@Override

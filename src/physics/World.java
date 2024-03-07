@@ -205,21 +205,17 @@ public class World {
 				ArrayList<Body> others = aabb_tree.getCollideList(body.aabb);
 				for(int j = 0; j < others.size(); ++j)
 				{
-					Body other = d_bodies.get(j);
+					Body other = others.get(j);
 					if(body == other)
 						continue;
-					if(other.getCollisionType() == CollisionType.STATIC)
-						continue;
-				
+					
 					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
 									  (body.group_filter & other.collide_filter) != 0;
+					
 					if(!collide)
 						continue;
 					
 					Vec2d poi = new Vec2d(0, 0);
-					
-					//if(!body.aabb.intersects(other.aabb))
-					//	continue;
 					
 					Vec2d move = Geometry.intersectionNormal(body.shape_proj, other.shape_proj, poi);
 					
@@ -231,65 +227,80 @@ public class World {
 						
 						if(listener != null)
 							listener.beforeSolve(collision_info);
-						//resolve overlap
-						move.mult(0.5f);
-						other.move(move);
-						move.negate();
-						body.move(move);
 						
-						body.updateAABB();
-						other.updateAABB();
-						
-						move.normalize();
-						collision_info.normal = move;
-						
-						solveDDCollision(collision_info);
-						
-						if(listener != null)
-							listener.afterSolve(collision_info);
-					}
-					
-				}
-				//static
-				for(int j = 0; j < s_bodies.size(); ++j)
-				{
-					Body other = s_bodies.get(j);
-					
-					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
-							  (body.group_filter & other.collide_filter) != 0;
-					if(!collide)
-						continue;
-					
-					Vec2d poi = new Vec2d(0, 0);
-					
-					if(!body.aabb.intersects(other.aabb))
-						continue;
-					
-					Vec2d move = Geometry.intersectionNormal(other.shape_proj, body.shape_proj, poi);
-					
-					if(!move.equals(Vec2d.ZERO))
-					{
-						collision_info.poc = poi;
-						collision_info.a = body;
-						collision_info.b = other;
-						
-						if(listener != null)
-							listener.beforeSolve(collision_info);
-						//resolve overlap
-						body.move(move);
-						
-						body.updateAABB();
-						
-						move.normalize();
-						collision_info.normal = move;
-						
-						solveDSCollision(collision_info);
+						if(other.getCollisionType() == CollisionType.STATIC)
+						{
+							move.negate();
+							body.move(move);
+							
+							body.updateAABB();
+							
+							move.normalize();
+							collision_info.normal = move;
+							
+							solveDSCollision(collision_info);
+						}
+						else if(other.getCollisionType() == CollisionType.DYNAMIC)
+						{
+							move.mult(0.5f);
+							other.move(move);
+							move.negate();
+							body.move(move);
+							
+							body.updateAABB();
+							other.updateAABB();
+							
+							move.normalize();
+							collision_info.normal = move;
+							
+							solveDDCollision(collision_info);
+						}
 						
 						if(listener != null)
 							listener.afterSolve(collision_info);
+						
 					}
-					
 				}
+//				//static
+//				for(int j = 0; j < s_bodies.size(); ++j)
+//				{
+//					Body other = s_bodies.get(j);
+//					
+//					boolean collide = (body.collide_filter & other.group_filter) != 0 &&
+//							  (body.group_filter & other.collide_filter) != 0;
+//					if(!collide)
+//						continue;
+//					
+//					Vec2d poi = new Vec2d(0, 0);
+//					
+//					if(!body.aabb.intersects(other.aabb))
+//						continue;
+//					
+//					Vec2d move = Geometry.intersectionNormal(other.shape_proj, body.shape_proj, poi);
+//					
+//					if(!move.equals(Vec2d.ZERO))
+//					{
+//						collision_info.poc = poi;
+//						collision_info.a = body;
+//						collision_info.b = other;
+//						
+//						if(listener != null)
+//							listener.beforeSolve(collision_info);
+//						//resolve overlap
+//						body.move(move);
+//						
+//						body.updateAABB();
+//						
+//						move.normalize();
+//						collision_info.normal = move;
+//						
+//						solveDSCollision(collision_info);
+//						
+//						if(listener != null)
+//							listener.afterSolve(collision_info);
+//					}
+//					
+//				}
 			}
 		}
 	}
